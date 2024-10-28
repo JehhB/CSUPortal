@@ -3,15 +3,9 @@ import { Image } from "expo-image";
 import { StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { RouteProp, ParamListBase } from "@react-navigation/native";
-import { BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
+import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
 import { theme } from "@/constants/themes";
 import { useState } from "react";
-
-export type AppbarProp = {
-  route: RouteProp<ParamListBase>;
-  options: BottomTabNavigationOptions;
-};
 
 const style = StyleSheet.create({
   appBar: {
@@ -32,7 +26,7 @@ const style = StyleSheet.create({
   },
 });
 
-export default function Appbar({ route, options }: AppbarProp) {
+export default function Appbar({ route, options }: BottomTabHeaderProps) {
   const [visible, setVisible] = useState(false);
   const topInset = useSafeAreaInsets();
 
