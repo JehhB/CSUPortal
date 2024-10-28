@@ -36,13 +36,10 @@ export default function RootLayout() {
 
   return (
     <PaperProvider theme={theme}>
-      <StatusBar backgroundColor="#6200ee" barStyle="dark-content" />
-      <SafeAreaView style={styles.safeArea}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </SafeAreaView>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" />
+      </Stack>
     </PaperProvider>
   );
 }

@@ -1,10 +1,10 @@
 import { Tabs } from "expo-router";
-import { Icon, BottomNavigation, Text, Appbar } from "react-native-paper";
+import { BottomNavigation, Icon, Text } from "react-native-paper";
 import { CommonActions } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { theme } from "@/constants/themes";
-import { Image } from "expo-image";
+import Appbar from "@/components/Appbar";
 
 const style = StyleSheet.create({
   activeIndicator: {
@@ -52,10 +52,7 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: true,
         header: ({ route, options }) => (
-          <Appbar.Header>
-            <Image source={require("@/assets/images/icon.png")} />
-            <Appbar.Content title={options.title ?? route.name} />
-          </Appbar.Header>
+          <Appbar route={route} options={options} />
         ),
       }}
       tabBar={({ navigation, state, descriptors, insets }) => (

@@ -18,7 +18,7 @@ importers:
         specifier: ^6.0.2
         version: 6.1.18(react-native@0.74.5(@babel/core@7.25.9)(@babel/preset-env@7.25.9(@babel/core@7.25.9))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
       expo:
-        specifier: ~51.0.28
+        specifier: ~51.0.38
         version: 51.0.38(@babel/core@7.25.9)(@babel/preset-env@7.25.9(@babel/core@7.25.9))
       expo-asset:
         specifier: ~10.0.10
