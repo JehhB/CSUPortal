@@ -1,4 +1,47 @@
-import { MD3Theme, MD3LightTheme as defaultTheme } from "react-native-paper";
+import { Platform } from "react-native";
+import {
+  MD3Theme,
+  configureFonts,
+  MD3LightTheme as defaultTheme,
+} from "react-native-paper";
+
+export const RopaSansRegular = Platform.select({
+  web: '"RopaSans_400Regular", sans-serif',
+  android: "RopaSans_400Regular",
+  ios: "RopaSans-Regular",
+});
+
+export const RopaSansRegularItalic = Platform.select({
+  web: '"RopaSans_400Regular_Italic", sans-serif',
+  android: "RopaSans_400Regular_Italic",
+  ios: "RopaSans-Italic",
+});
+
+export const PlayfairDisplayRegular = Platform.select({
+  web: '"PlayfairDisplay_400Regular", serif',
+  android: "PlayfairDisplay_400Regular",
+  ios: "PlayfairDisplay-Regular",
+});
+
+export const fontConfig = configureFonts({
+  config: {
+    displayLarge: { fontFamily: PlayfairDisplayRegular },
+    displayMedium: { fontFamily: PlayfairDisplayRegular },
+    displaySmall: { fontFamily: PlayfairDisplayRegular },
+
+    headlineLarge: { fontFamily: RopaSansRegular },
+    headlineMedium: { fontFamily: RopaSansRegular },
+    headlineSmall: { fontFamily: RopaSansRegularItalic },
+
+    titleLarge: { fontFamily: RopaSansRegular },
+    titleMedium: { fontFamily: RopaSansRegular },
+    titleSmall: { fontFamily: RopaSansRegular },
+
+    labelLarge: { fontFamily: RopaSansRegular },
+    labelMedium: { fontFamily: RopaSansRegular },
+    labelSmall: { fontFamily: RopaSansRegular },
+  },
+});
 
 export const theme: MD3Theme = {
   ...defaultTheme,
@@ -31,6 +74,9 @@ export const theme: MD3Theme = {
     error: "#7f1d1d",
     errorContainer: "#7f1d1d",
 
+    outline: "#4B201F",
+    outlineVariant: "#4B201F",
+
     /*
     onSurface: string,
     onSurfaceVariant: string,
@@ -49,4 +95,5 @@ export const theme: MD3Theme = {
     elevation: MD3ElevationColors,
     */
   },
+  fonts: fontConfig,
 };

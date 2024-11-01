@@ -4,7 +4,7 @@ import { Text } from "react-native-paper";
 export default function HomeScreen() {
   return (
     <View>
-      <Text>test test</Text>
+      <Text variant="bodyMedium">test test</Text>
     </View>
   );
 }

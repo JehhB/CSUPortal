@@ -5,8 +5,12 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
-import { SafeAreaView } from "react-native-safe-area-context";
-import { StatusBar, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import {
+  RopaSans_400Regular,
+  RopaSans_400Regular_Italic,
+} from "@expo-google-fonts/ropa-sans";
+import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display";
 import { theme } from "@/constants/themes";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -21,7 +25,9 @@ const styles = StyleSheet.create({
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    RopaSans_400Regular,
+    RopaSans_400Regular_Italic,
+    PlayfairDisplay_400Regular,
   });
 
   useEffect(() => {
