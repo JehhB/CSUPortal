@@ -4,7 +4,7 @@ import {
   BottomNavigation as MaterialBottomNavigation,
   Text,
 } from "react-native-paper";
-import { theme } from "@/constants/themes";
+import { theme } from "@/shared/constants/themes";
 import { StyleSheet } from "react-native";
 
 const style = StyleSheet.create({

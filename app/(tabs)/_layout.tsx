@@ -1,8 +1,8 @@
 import { Tabs } from "expo-router";
 import { Icon } from "react-native-paper";
 import React from "react";
-import Appbar from "@/components/Appbar";
-import BottomNavigation from "@/components/BottomNavigation";
+import Appbar from "@/shared/components/Appbar";
+import BottomNavigation from "@/shared/components/BottomNavigation";
 
 export default function TabLayout() {
   const routes = [

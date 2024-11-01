@@ -11,9 +11,8 @@ import { StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
-import { theme } from "@/constants/themes";
+import { theme } from "@/shared/constants/themes";
 import { useState } from "react";
-import { Options } from "react-native/Libraries/Utilities/codegenNativeCommands";
 
 const style = StyleSheet.create({
   appBar: {
@@ -85,7 +84,7 @@ export default function Appbar({
   return (
     <MaterialAppbar.Header style={style.appBar}>
       <Image
-        source={require("@/assets/images/icon.png")}
+        source={require("@@/assets/images/icon.png")}
         contentFit="cover"
         style={style.logo}
       />

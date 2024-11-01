@@ -11,7 +11,7 @@ import {
   RopaSans_400Regular_Italic,
 } from "@expo-google-fonts/ropa-sans";
 import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display";
-import { theme } from "@/constants/themes";
+import { theme } from "@/shared/constants/themes";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
