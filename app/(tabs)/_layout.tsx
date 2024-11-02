@@ -1,10 +1,13 @@
-import { Tabs } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 import { Icon } from "react-native-paper";
 import React from "react";
 import Appbar from "@/shared/components/Appbar";
 import BottomNavigation from "@/shared/components/BottomNavigation";
+import useAuth from "@/auth/useAuth";
 
 export default function TabLayout() {
+  const { isAuthenticated } = useAuth();
+
   const routes = [
     {
       name: "index",
@@ -25,6 +28,8 @@ export default function TabLayout() {
       unfocusedIcon: "format-list-checkbox",
     },
   ];
+
+  if (!isAuthenticated) return <Redirect href="/signin" />;
 
   return (
     <Tabs

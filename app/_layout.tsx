@@ -5,23 +5,15 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
-import { StyleSheet } from "react-native";
 import {
   RopaSans_400Regular,
   RopaSans_400Regular_Italic,
 } from "@expo-google-fonts/ropa-sans";
 import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display";
 import { theme } from "@/shared/constants/themes";
+import QueryClientProvider from "@/queryClient/QueryClientProvider";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-  },
-});
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -42,10 +34,13 @@ export default function RootLayout() {
 
   return (
     <PaperProvider theme={theme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      <QueryClientProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="signin" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </QueryClientProvider>
     </PaperProvider>
   );
 }
