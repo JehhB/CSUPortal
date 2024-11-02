@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
 import { theme } from "@/shared/constants/themes";
 import { useState } from "react";
+import useAuth from "@/auth/useAuth";
 
 const style = StyleSheet.create({
   appBar: {
@@ -46,38 +47,42 @@ export default function Appbar({
 }: Partial<BottomTabHeaderProps>) {
   const [visible, setVisible] = useState(false);
   const topInset = useSafeAreaInsets();
+  const { logout } = useAuth();
 
-  const menuItems = [
+  const menuItems: (
+    | { title: string; icon: string; onPress: () => void }
+    | { divider: true }
+  )[] = [
     {
-      route: "/profile",
       title: "Profile",
       icon: "account-outline",
+      onPress: () => {},
     },
     {
-      route: "/ms-account",
       title: "Microsoft account",
       icon: "email-outline",
+      onPress: () => {},
     },
     {
       divider: true,
     },
     {
-      route: "/enrollment",
       title: "Enrollment",
       icon: "account-details-outline",
+      onPress: () => {},
     },
     {
-      route: "/change-password",
       title: "Change password",
       icon: "account-edit-outline",
+      onPress: () => {},
     },
     {
       divider: true,
     },
     {
-      route: "/logout",
       title: "Logout",
       icon: "logout",
+      onPress: logout,
     },
   ];
 
@@ -111,13 +116,13 @@ export default function Appbar({
         }
       >
         {menuItems.map((item, index) =>
-          item.divider === true ? (
+          "divider" in item ? (
             <Divider key={index} />
           ) : (
             <Menu.Item
               key={index}
               dense
-              onPress={() => {}}
+              onPress={item.onPress}
               title={item.title}
               titleStyle={theme.fonts.titleMedium}
               leadingIcon={({ size }) => (

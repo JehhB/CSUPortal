@@ -1,12 +1,19 @@
 import { LoginCredentials } from "@/auth/authService";
 import useAuth from "@/auth/useAuth";
 import Appbar from "@/shared/components/Appbar";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { View } from "react-native";
-import { Button, Text, TextInput } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";
 
 export default function Signin() {
-  const { login } = useAuth();
+  const router = useRouter();
+
+  const { login } = useAuth({
+    onLoginSuccess: () => {
+      router.replace("/(tabs)");
+    },
+  });
 
   const [credentials, setCredentials] = useState<LoginCredentials>({
     id: "",
