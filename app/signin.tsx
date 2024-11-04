@@ -112,11 +112,7 @@ export default function Signin() {
               />
             </Animated.View>
           ) : (
-            <Animated.View
-              style={styles.form}
-              entering={FadeIn}
-              exiting={FadeOut}
-            >
+            <Animated.View style={styles.form}>
               <Text style={styles.formTitle} variant="headlineMedium">
                 Welcome, Agila!
               </Text>
