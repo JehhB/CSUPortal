@@ -4,6 +4,7 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Platform } from "react-native";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,7 +26,7 @@ export default function QueryClientProvider(props: { children?: ReactNode }) {
       persistOptions={{ persister: asyncStoragePersiter }}
     >
       {props.children}
-      <ReactQueryDevtools />
+      {Platform.OS == "web" && <ReactQueryDevtools />}
     </PersistQueryClientProvider>
   );
 }

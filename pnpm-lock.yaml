@@ -38,6 +38,12 @@ importers:
       '@tanstack/react-query-persist-client':
         specifier: ^5.59.16
         version: 5.59.16(@tanstack/react-query@5.59.16(react@18.2.0))(react@18.2.0)
+      '@types/color':
+        specifier: ^4.2.0
+        version: 4.2.0
+      color:
+        specifier: ^4.2.3
+        version: 4.2.3
       expo:
         specifier: ~51.0.38
         version: 51.0.38(@babel/core@7.25.9)(@babel/preset-env@7.25.9(@babel/core@7.25.9))
@@ -89,6 +95,9 @@ importers:
       react-native-screens:
         specifier: 3.31.1
         version: 3.31.1(react-native@0.74.5(@babel/core@7.25.9)(@babel/preset-env@7.25.9(@babel/core@7.25.9))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
+      react-native-text-input-mask:
+        specifier: ^3.2.0
+        version: 3.2.0(react-native@0.74.5(@babel/core@7.25.9)(@babel/preset-env@7.25.9(@babel/core@7.25.9))(@types/react@18.2.79)(react@18.2.0))
       react-native-web:
         specifier: ~0.19.13
         version: 0.19.13(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1406,6 +1415,15 @@ packages:
 
   '@types/babel__traverse@7.20.6':
     resolution: {integrity: sha512-r1bzfrm0tomOI8g1SzvCaQHo6Lcv6zu0EA+W2kHrt8dyrHQxGzBBL4kdkzIS+jBMV+EYcMAEAqXqYaLJq5rOZg==}
+
+  '@types/color-convert@2.0.4':
+    resolution: {integrity: sha512-Ub1MmDdyZ7mX//g25uBAoH/mWGd9swVbt8BseymnaE18SU4po/PjmCrHxqIIRjBo3hV/vh1KGr0eMxUhp+t+dQ==}
+
+  '@types/color-name@1.1.5':
+    resolution: {integrity: sha512-j2K5UJqGTxeesj6oQuGpMgifpT5k9HprgQd8D1Y0lOFqKHl3PJu5GMeS4Y5EgjS55AE6OQxf8mPED9uaGbf4Cg==}
+
+  '@types/color@4.2.0':
+    resolution: {integrity: sha512-6+xrIRImMtGAL2X3qYkd02Mgs+gFGs+WsK0b7VVMaO4mYRISwyTjcqNrO0mNSmYEoq++rSLDB2F5HDNmqfOe+A==}
 
   '@types/cookie@0.6.0':
     resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
@@ -3950,6 +3968,11 @@ packages:
     peerDependencies:
       react: '*'
       react-native: '*'
+
+  react-native-text-input-mask@3.2.0:
+    resolution: {integrity: sha512-YAV1MeZr5ME/GOUBSPCjAVCcDMPNcyoXw5FOdPkA8GK9Q+t1TcvD2QOGWglVxc9vAKMddub7EZ2wQhk2ph+ElQ==}
+    peerDependencies:
+      react-native: '>=0.69.0'
 
   react-native-vector-icons@10.2.0:
     resolution: {integrity: sha512-n5HGcxUuVaTf9QJPs/W22xQpC2Z9u0nb0KgLPnVltP8vdUvOp6+R26gF55kilP/fV4eL4vsAHUqUjewppJMBOQ==}
@@ -7010,6 +7033,16 @@ snapshots:
     dependencies:
       '@babel/types': 7.25.9
 
+  '@types/color-convert@2.0.4':
+    dependencies:
+      '@types/color-name': 1.1.5
+
+  '@types/color-name@1.1.5': {}
+
+  '@types/color@4.2.0':
+    dependencies:
+      '@types/color-convert': 2.0.4
+
   '@types/cookie@0.6.0': {}
 
   '@types/graceful-fs@4.1.9':
@@ -10015,6 +10048,10 @@ snapshots:
       react-freeze: 1.0.4(react@18.2.0)
       react-native: 0.74.5(@babel/core@7.25.9)(@babel/preset-env@7.25.9(@babel/core@7.25.9))(@types/react@18.2.79)(react@18.2.0)
       warn-once: 0.1.1
+
+  react-native-text-input-mask@3.2.0(react-native@0.74.5(@babel/core@7.25.9)(@babel/preset-env@7.25.9(@babel/core@7.25.9))(@types/react@18.2.79)(react@18.2.0)):
+    dependencies:
+      react-native: 0.74.5(@babel/core@7.25.9)(@babel/preset-env@7.25.9(@babel/core@7.25.9))(@types/react@18.2.79)(react@18.2.0)
 
   react-native-vector-icons@10.2.0:
     dependencies:
