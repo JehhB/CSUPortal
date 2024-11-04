@@ -13,11 +13,15 @@ import Animated, {
   FadeOut,
   FadeOutUp,
   LinearTransition,
+  ZoomIn,
+  ZoomOut,
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native";
+import FadeZoomOut from "@/shared/animations/FadeZoomOut";
+import FadeZoomIn from "@/shared/animations/FadeZoomIn";
 
 export default function Signin() {
   const [isSplash, setSplash] = useState(true);
@@ -103,16 +107,27 @@ export default function Signin() {
             />
           </Animated.View>
 
-          {isSplash ? (
-            <Animated.View style={styles.graphics}>
+          {isSplash && (
+            <Animated.View
+              style={styles.graphics}
+              entering={FadeZoomIn}
+              exiting={FadeZoomOut}
+              layout={LinearTransition}
+            >
               <Image
-                style={{ width: "100%", height: "100%" }}
+                style={styles.graphicsImage}
                 source={require("@@/assets/images/signin-graphics.svg")}
                 contentFit="contain"
               />
             </Animated.View>
-          ) : (
-            <Animated.View style={styles.form}>
+          )}
+          {!isSplash && (
+            <Animated.View
+              style={styles.form}
+              entering={FadeIn}
+              exiting={FadeOut.duration(150)}
+              layout={LinearTransition}
+            >
               <Text style={styles.formTitle} variant="headlineMedium">
                 Welcome, Agila!
               </Text>
@@ -187,6 +202,10 @@ const styles = StyleSheet.create({
   },
   graphics: {
     flex: 1,
+  },
+  graphicsImage: {
+    width: "100%",
+    height: "100%",
   },
   form: {
     flex: 1,
