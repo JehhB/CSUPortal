@@ -29,11 +29,10 @@ const authService = {
       throw new AuthenticationError("Invalid credentials");
     }
 
-    if (!res.ok) {
-      throw new Error("Unknown error is encountered");
-    }
+    const data: LoginResponse = await res.json();
+    if ("error" in data) throw new Error(data.error);
 
-    return res.json() as Promise<LoginResponse>;
+    return data;
   },
 
   async logout(accessToken: string | undefined) {

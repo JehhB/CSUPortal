@@ -6,15 +6,13 @@ import { useEffect, useRef, useState } from "react";
 import { StyleSheet, View, TextInput as NativeTextInput } from "react-native";
 import TextInput from "@/shared/components/TextInput";
 import { Image } from "expo-image";
-import { Button, Text } from "react-native-paper";
+import { Button, Snackbar, Text } from "react-native-paper";
 import Animated, {
   FadeIn,
   FadeInUp,
   FadeOut,
   FadeOutUp,
   LinearTransition,
-  ZoomIn,
-  ZoomOut,
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
@@ -25,13 +23,42 @@ import FadeZoomIn from "@/shared/animations/FadeZoomIn";
 
 export default function Signin() {
   const [isSplash, setSplash] = useState(true);
-  const router = useRouter();
+  const [errorShown, showError] = useState(false);
 
-  const { login } = useAuth({
-    onLoginSuccess: () => {
-      router.replace("/(tabs)");
-    },
+  const dismisError = () => showError(false);
+
+  const router = useRouter();
+  const { loginMutation } = useAuth();
+
+  const [credentials, setCredentials] = useState<LoginCredentials>({
+    id: "",
+    password: "",
   });
+
+  const inputRefs = useRef<(NativeTextInput | null)[]>([]);
+
+  const login = () => {
+    showError(false);
+
+    if (!credentials.id) {
+      inputRefs.current.at(0)?.focus();
+      return;
+    }
+
+    if (!credentials.password) {
+      inputRefs.current.at(1)?.focus();
+      return;
+    }
+
+    loginMutation.mutate(credentials, {
+      onSuccess: () => {
+        router.replace("/(tabs)");
+      },
+      onError: () => {
+        showError(true);
+      },
+    });
+  };
 
   const blobAnimatedStyle = useAnimatedStyle(() => ({
     transform: [
@@ -47,13 +74,6 @@ export default function Signin() {
       },
     ],
   }));
-
-  const [credentials, setCredentials] = useState<LoginCredentials>({
-    id: "",
-    password: "",
-  });
-
-  const inputRefs = useRef<(NativeTextInput | null)[]>([]);
 
   useEffect(() => {
     if (isSplash == true) return;
@@ -154,12 +174,17 @@ export default function Signin() {
                 onChangeText={(text) => {
                   setCredentials((cred) => ({ ...cred, password: text }));
                 }}
+                onSubmitEditing={login}
                 autoComplete="password"
                 keyboardType="default"
                 secureTextEntry={true}
                 returnKeyType="done"
               />
-              <Button mode="contained" style={styles.loginButton}>
+              <Button
+                mode="contained"
+                style={styles.loginButton}
+                onPress={login}
+              >
                 Login
               </Button>
             </Animated.View>
@@ -179,6 +204,21 @@ export default function Signin() {
           </Animated.View>
         </TouchableOpacity>
       </SafeAreaView>
+
+      <Snackbar
+        visible={errorShown}
+        onDismiss={dismisError}
+        style={styles.error}
+        action={{
+          label: "Dismiss",
+          labelStyle: styles.errorAction,
+          onPress: dismisError,
+        }}
+      >
+        <Text variant="labelLarge" style={styles.errorContent}>
+          {loginMutation.error?.message ?? "Unknown error encountered"}
+        </Text>
+      </Snackbar>
     </View>
   );
 }
@@ -239,5 +279,14 @@ const styles = StyleSheet.create({
   arrowImage: {
     height: 21,
     width: 66,
+  },
+  error: {
+    backgroundColor: theme.colors.error,
+  },
+  errorContent: {
+    color: "#FFFFFF",
+  },
+  errorAction: {
+    color: theme.colors.secondary,
   },
 });
