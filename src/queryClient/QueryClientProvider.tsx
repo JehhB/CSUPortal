@@ -1,8 +1,9 @@
 import { QueryClient } from "@tanstack/react-query";
+import { QueryClientProvider as TanstackQueryClientProvider } from "@tanstack/react-query";
 import { ReactNode } from "react";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Platform } from "react-native";
 
@@ -19,14 +20,16 @@ const asyncStoragePersiter = createAsyncStoragePersister({
   key: "__REACT_QUERY_CACHE__",
 });
 
+persistQueryClient({
+  queryClient,
+  persister: asyncStoragePersiter,
+});
+
 export default function QueryClientProvider(props: { children?: ReactNode }) {
   return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{ persister: asyncStoragePersiter }}
-    >
+    <TanstackQueryClientProvider client={queryClient}>
       {props.children}
       {Platform.OS == "web" && <ReactQueryDevtools />}
-    </PersistQueryClientProvider>
+    </TanstackQueryClientProvider>
   );
 }
