@@ -20,6 +20,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native";
 import FadeZoomOut from "@/shared/animations/FadeZoomOut";
 import FadeZoomIn from "@/shared/animations/FadeZoomIn";
+import color from "color";
 
 export default function Signin() {
   const [isSplash, setSplash] = useState(true);
@@ -181,11 +182,13 @@ export default function Signin() {
                 returnKeyType="done"
               />
               <Button
+                disabled={loginMutation.isPending}
+                loading={loginMutation.isPending}
                 mode="contained"
                 style={styles.loginButton}
                 onPress={login}
               >
-                Login
+                LOGIN
               </Button>
             </Animated.View>
           )}
@@ -265,8 +268,6 @@ const styles = StyleSheet.create({
     height: 64,
   },
   loginButton: {
-    backgroundColor: theme.colors.primary,
-    color: theme.colors.secondary,
     borderRadius: 4,
   },
   arrow: {

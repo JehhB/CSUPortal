@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useRef } from "react";
+import React, { forwardRef } from "react";
 import {
   TextInput as MaterialTextInput,
   TextInputProps,
@@ -33,9 +33,9 @@ const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, ref) => {
         },
       }}
       underlineColor={theme.colors.outline}
-      underlineStyle={[styles.underlineStyle, props.underlineStyle]}
       activeUnderlineColor={theme.colors.primary}
       {...props}
+      underlineStyle={[styles.underlineStyle, props.underlineStyle]}
     />
   );
 });
