@@ -8,7 +8,7 @@ export const LOGOUT_MUTATION_KEY = ["auth", "login"];
 export default function useAuth() {
   const queryClient = useQueryClient();
 
-  const { data: accessToken } = useQuery<string>({
+  const authQuery = useQuery<string>({
     queryKey: AUTH_QUERY_KEY,
     staleTime: Infinity,
     gcTime: Infinity,
@@ -16,6 +16,8 @@ export default function useAuth() {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
+
+  const accessToken = authQuery.data;
 
   const loginMutation = useMutation({
     mutationKey: LOGIN_MUTATION_KEY,

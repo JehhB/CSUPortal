@@ -33,7 +33,7 @@ export const fontConfig = configureFonts({
     headlineMedium: { fontFamily: RopaSansRegular },
     headlineSmall: { fontFamily: RopaSansRegularItalic },
 
-    titleLarge: { fontFamily: RopaSansRegular },
+    titleLarge: { fontFamily: RopaSansRegularItalic },
     titleMedium: { fontFamily: RopaSansRegular },
     titleSmall: { fontFamily: RopaSansRegular },
 

@@ -1,10 +1,4 @@
-import {
-  forwardRef,
-  useCallback,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import { forwardRef } from "react";
 import {
   ColorValue,
   RefreshControl,
@@ -17,69 +11,24 @@ import {
 } from "react-native";
 import { theme } from "../constants/themes";
 
-export type ScrollViewHandle = Pick<
-  NativeScrollView,
-  | "scrollTo"
-  | "scrollToEnd"
-  | "flashScrollIndicators"
-  | "getScrollResponder"
-  | "getScrollableNode"
-> & {
-  isRefreshing: boolean;
-  startRefreshing: () => void;
-  endRefreshing: () => void;
-};
-
 export type ScrollViewProps = NativeScrollViewProps & {
+  refreshing?: boolean;
   refreshColors?: ColorValue[];
-  onRefresh?: (value: {
-    isRefreshing: boolean;
-    startRefreshing: () => void;
-    endRefreshing: () => void;
-  }) => void;
+  onRefresh?: () => void;
   containerStyle?: StyleProp<ViewStyle>;
 };
 
-const ScrollView = forwardRef<ScrollViewHandle, ScrollViewProps>(
+const ScrollView = forwardRef<NativeScrollView, ScrollViewProps>(
   (props, ref) => {
-    const [isRefreshing, setRefreshing] = useState(false);
-    const root = useRef<NativeScrollView | null>(null);
-
-    const startRefreshing = () => setRefreshing(true);
-    const endRefreshing = () => setRefreshing(false);
-
-    const onRefresh = useCallback(() => {
-      if (props.onRefresh)
-        props.onRefresh({
-          isRefreshing,
-          startRefreshing,
-          endRefreshing,
-        });
-    }, [isRefreshing, props.onRefresh]);
-
-    useImperativeHandle(
-      ref,
-      () => ({
-        scrollTo: (y, x, animated) => root.current!.scrollTo(y, x, animated),
-        scrollToEnd: (options) => root.current!.scrollToEnd(options),
-        flashScrollIndicators: () => root.current!.flashScrollIndicators(),
-        getScrollResponder: () => root.current!.getScrollResponder(),
-        getScrollableNode: () => root.current!.getScrollableNode(),
-        isRefreshing,
-        startRefreshing,
-        endRefreshing,
-      }),
-      [isRefreshing],
-    );
-
+    const refreshing = props.refreshing ?? false;
     const refreshColors = props.refreshColors ?? [
       theme.colors.primary,
       theme.colors.secondary,
     ];
 
     const {
-      refreshColors: _refreshColors,
-      onRefresh: _onRefresh,
+      refreshColors: _,
+      onRefresh,
       containerStyle,
       children,
       ...scrollViewProps
@@ -87,15 +36,13 @@ const ScrollView = forwardRef<ScrollViewHandle, ScrollViewProps>(
 
     return (
       <NativeScrollView
-        ref={root}
+        ref={ref}
         refreshControl={
-          props.onRefresh ? (
-            <RefreshControl
-              colors={refreshColors}
-              refreshing={isRefreshing}
-              onRefresh={onRefresh}
-            />
-          ) : undefined
+          <RefreshControl
+            colors={refreshColors}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
         }
         {...scrollViewProps}
         style={[styles.scrollView, props.style]}
@@ -112,8 +59,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    padding: 16,
-    rowGap: 16,
+    padding: 8,
+    rowGap: 8,
   },
 });
 
