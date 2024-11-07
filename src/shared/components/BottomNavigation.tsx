@@ -54,6 +54,12 @@ export default function BottomNavigation({
           });
         }
       }}
+      onTabLongPress={({ route }) => {
+        navigation.emit({
+          type: "tabLongPress",
+          target: route.key,
+        });
+      }}
       renderLabel={({ route, focused }) => {
         const { options } = descriptors[route.key];
         return (

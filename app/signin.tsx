@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { StyleSheet, View, TextInput as NativeTextInput } from "react-native";
 import TextInput from "@/shared/components/TextInput";
 import { Image } from "expo-image";
-import { Button, Snackbar, Text } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 import Animated, {
   FadeIn,
   FadeInUp,
@@ -20,7 +20,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native";
 import FadeZoomOut from "@/shared/animations/FadeZoomOut";
 import FadeZoomIn from "@/shared/animations/FadeZoomIn";
-import color from "color";
+import Snackbar from "@/shared/components/Snackbar";
 
 export default function Signin() {
   const [isSplash, setSplash] = useState(true);
@@ -211,17 +211,8 @@ export default function Signin() {
       <Snackbar
         visible={errorShown}
         onDismiss={dismisError}
-        style={styles.error}
-        action={{
-          label: "Dismiss",
-          labelStyle: styles.errorAction,
-          onPress: dismisError,
-        }}
-      >
-        <Text variant="labelLarge" style={styles.errorContent}>
-          {loginMutation.error?.message ?? "Unknown error encountered"}
-        </Text>
-      </Snackbar>
+        content={loginMutation.error?.message ?? "Unknown error encountered"}
+      />
     </View>
   );
 }
@@ -280,14 +271,5 @@ const styles = StyleSheet.create({
   arrowImage: {
     height: 21,
     width: 66,
-  },
-  error: {
-    backgroundColor: theme.colors.error,
-  },
-  errorContent: {
-    color: "#FFFFFF",
-  },
-  errorAction: {
-    color: theme.colors.secondary,
   },
 });
