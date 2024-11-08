@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { ColorValue, StyleProp, StyleSheet, ViewStyle } from "react-native";
-import { Circle, G, Path, Svg, Text } from "react-native-svg";
+import { StyleProp, ViewStyle } from "react-native";
+import { Circle, Path, Svg, Text } from "react-native-svg";
 import { RopaSansRegular, theme } from "@/shared/constants/themes";
 import Animated, {
   useAnimatedProps,
@@ -51,12 +51,7 @@ export default function Donut(props: DonutProps) {
   }, [progress]);
 
   return (
-    <Svg
-      width={d}
-      height={d}
-      viewBox={viewBox}
-      style={[styles.style, props.style]}
-    >
+    <Svg width={d} height={d} viewBox={viewBox} style={[props.style]}>
       <Circle
         r={r}
         stroke={theme.colors.outline}
@@ -75,7 +70,7 @@ export default function Donut(props: DonutProps) {
           textAnchor="middle"
           fontFamily={RopaSansRegular}
           fontSize={24}
-          fill={theme.colors.onSurface}
+          fill={theme.colors.primary}
         >
           {props.content}
         </Text>
@@ -102,9 +97,3 @@ export default function Donut(props: DonutProps) {
     </Svg>
   );
 }
-
-const styles = StyleSheet.create({
-  style: {
-    flex: 1,
-  },
-});
