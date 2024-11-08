@@ -65,7 +65,7 @@ export const theme: MD3Theme = {
     onTertiaryContainer: "#4B201F",
 
     surface: "#feffe5",
-    onSurface: "#4B201F",
+    onSurface: "#0c0a09",
 
     surfaceVariant: "#450a0a",
     surfaceDisabled: "#572318",
@@ -75,11 +75,10 @@ export const theme: MD3Theme = {
     error: "#7f1d1d",
     errorContainer: "#7f1d1d",
 
-    outline: "#4B201F",
-    outlineVariant: "#4B201F",
+    outline: "#1c1917",
+    outlineVariant: "#292524",
 
     /*
-    onSurface: string,
     onSurfaceVariant: string,
     onError: string,
     onErrorContainer: string,

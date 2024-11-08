@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 import Snackbar from "@/shared/components/Snackbar";
+import Donut from "@/graphs/Donut";
+import { theme } from "@/shared/constants/themes";
 
 export default function HomeScreen() {
   const navigation = useNavigation<BottomTabNavigationProp<ParamListBase>>();
@@ -37,6 +39,13 @@ export default function HomeScreen() {
     return unsubscribe;
   }, [navigation]);
 
+  const completion = completionQuery.data;
+  const progress = completion
+    ? completion.FinishedSubjects / completion.SubjectCount
+    : 0;
+
+  const progressPercentage = `${Math.round(progress * 100)} %`;
+
   return (
     <>
       <ScrollView refreshing={completionQuery.isFetching} onRefresh={refetch}>
@@ -45,6 +54,11 @@ export default function HomeScreen() {
             Current Progress
           </Text>
           <Text>{JSON.stringify(completionQuery.data)}</Text>
+          <Donut
+            progress={progress}
+            content={progressPercentage}
+            subContent="Completion"
+          />
         </Surface>
       </ScrollView>
       <Snackbar
@@ -62,5 +76,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   titles: {
     textAlign: "center",
+    color: theme.colors.primary,
   },
 });
