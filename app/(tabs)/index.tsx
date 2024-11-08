@@ -4,32 +4,31 @@ import Surface from "@/shared/components/Surface";
 import useStudentCompletion from "@/student/completion/useStudentCompletion";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import Snackbar from "@/shared/components/Snackbar";
 import Donut from "@/graphs/Donut";
 import { theme } from "@/shared/constants/themes";
+import useStudentGwa from "@/student/gwa/useStudentGwa";
+import useShowQueryError from "@/shared/hooks/useShowQueryError";
 
 export default function HomeScreen() {
   const navigation = useNavigation<BottomTabNavigationProp<ParamListBase>>();
-  const [hasError, showError] = useState(false);
 
   const { accessToken } = useAuth();
   const { completionQuery } = useStudentCompletion(accessToken);
+  const { gwaQuery, normalizedGwa } = useStudentGwa(accessToken);
 
-  function dismissError() {
-    showError(false);
-  }
+  const { hasError, dismissError, errorMessage } = useShowQueryError([
+    completionQuery,
+    gwaQuery,
+  ]);
 
   function refetch() {
+    gwaQuery.refetch();
     completionQuery.refetch();
   }
-
-  useEffect(() => {
-    if (!completionQuery.isError) return;
-    showError(true);
-  }, [completionQuery.isError]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("tabLongPress", () => {
@@ -38,6 +37,10 @@ export default function HomeScreen() {
 
     return unsubscribe;
   }, [navigation]);
+
+  useEffect(() => {
+    console.log(normalizedGwa);
+  }, [normalizedGwa]);
 
   const completion = completionQuery.data;
   const progress = completion
@@ -84,10 +87,7 @@ export default function HomeScreen() {
       <Snackbar
         visible={hasError}
         onDismiss={dismissError}
-        content={
-          completionQuery.error?.message ??
-          "Unknown error encountered while fetching"
-        }
+        content={errorMessage ?? "Unknown error encountered"}
       />
     </>
   );

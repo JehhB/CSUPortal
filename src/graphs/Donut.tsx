@@ -80,7 +80,6 @@ export default function Donut(props: DonutProps) {
           y={16}
           textAnchor="middle"
           fontFamily={RopaSansRegular}
-          transform="translateY(-100%)"
           fill={"#44403c"}
         >
           {props.subContent}

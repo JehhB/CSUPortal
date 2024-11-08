@@ -8,6 +8,8 @@ export type ArcDef = {
 };
 
 export default function createArcPath(def: ArcDef) {
+  "worklet";
+
   const {
     cx = 0,
     cy = 0,
