@@ -23,9 +23,8 @@ function getSem(periodCode: string): number | "summer" {
 }
 
 export default function perSemGwa(record: StudentGwa): StudentGwaPerSem[] {
-  const years = Object.keys(record)
-    .map((x) => Number.parseInt(x))
-    .toSorted((a, b) => a - b);
+  const years = Object.keys(record).map((x) => Number.parseInt(x));
+  years.sort((a, b) => a - b);
 
   const perSem: StudentGwaPerSem[] = [];
 

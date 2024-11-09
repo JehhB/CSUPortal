@@ -8,6 +8,7 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { DevToolsBubble } from "react-native-react-query-devtools";
 import { Platform } from "react-native";
 
 const queryClient = new QueryClient({
@@ -40,7 +41,8 @@ export default function QueryClientProvider(props: { children?: ReactNode }) {
   return (
     <TanstackQueryClientProvider client={queryClient}>
       {props.children}
-      {Platform.OS == "web" && <ReactQueryDevtools />}
+      {__DEV__ &&
+        (Platform.OS == "web" ? <ReactQueryDevtools /> : <DevToolsBubble />)}
     </TanstackQueryClientProvider>
   );
 }
