@@ -12,6 +12,7 @@ import Donut from "@/graphs/Donut";
 import { theme } from "@/shared/constants/themes";
 import useStudentGwa from "@/student/gwa/useStudentGwa";
 import useShowQueryError from "@/shared/hooks/useShowQueryError";
+import GwaBarGraph from "@/graphs/GwaBarGraph";
 
 export default function HomeScreen() {
   const navigation = useNavigation<BottomTabNavigationProp<ParamListBase>>();
@@ -39,10 +40,6 @@ export default function HomeScreen() {
 
     return unsubscribe;
   }, [navigation]);
-
-  useEffect(() => {
-    console.log(normalizedGwa);
-  }, [normalizedGwa]);
 
   const completion = completionQuery.data;
   const progress = completion
@@ -84,6 +81,12 @@ export default function HomeScreen() {
               </Text>
             </View>
           </View>
+        </Surface>
+        <Surface>
+          <Text variant="titleLarge" style={styles.titles}>
+            General Weighted Average per Semester
+          </Text>
+          <GwaBarGraph gwa={normalizedGwa} maxWidth={350} />
         </Surface>
       </ScrollView>
       <Snackbar

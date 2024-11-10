@@ -10,7 +10,8 @@ const styles = StyleSheet.create({
       .mix(color(theme.colors.background), 0.7)
       .string(),
     borderRadius: theme.roundness,
-    padding: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 8,
     borderWidth: 1,
     borderStyle: "solid",
     borderColor: theme.colors.outline,

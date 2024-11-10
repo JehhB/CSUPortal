@@ -18,28 +18,36 @@ export type ScrollViewProps = NativeScrollViewProps & {
   refreshColors?: ColorValue[];
   onRefresh?: () => void;
   wrapperStyle?: StyleProp<ViewStyle>;
-  containerStyle?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
 };
 
 const ScrollView = forwardRef<NativeScrollView, ScrollViewProps>(
   (props, ref) => {
-    const refreshing = props.refreshing ?? false;
-    const refreshColors = props.refreshColors ?? [
-      theme.colors.primary,
-      theme.colors.secondary,
-    ];
-
     const {
-      refreshColors: _,
+      refreshing = false,
+      refreshColors = [theme.colors.primary, theme.colors.secondary],
       onRefresh,
       wrapperStyle,
-      containerStyle,
+      contentStyle,
       children,
+      style,
       ...scrollViewProps
     } = props;
 
     return (
-      <View style={[styles.wrapper, styles.wrapper]}>
+      <NativeScrollView
+        ref={ref}
+        style={[styles.scrollView, style]}
+        contentContainerStyle={[styles.wrapper, wrapperStyle]}
+        refreshControl={
+          <RefreshControl
+            colors={refreshColors}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+        {...scrollViewProps}
+      >
         {Platform.OS === "web" && refreshing && (
           <Animated.View
             style={[styles.progress]}
@@ -47,35 +55,23 @@ const ScrollView = forwardRef<NativeScrollView, ScrollViewProps>(
             exiting={FadeOut}
           />
         )}
-        <NativeScrollView
-          ref={ref}
-          refreshControl={
-            <RefreshControl
-              colors={refreshColors}
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
-          }
-          {...scrollViewProps}
-          style={[styles.scrollView, props.style]}
-        >
-          <View
-            style={[styles.container, containerStyle]}
-            children={children}
-          />
-        </NativeScrollView>
-      </View>
+        <View style={[styles.container]}>
+          <View style={[styles.content, contentStyle]} children={children} />
+        </View>
+      </NativeScrollView>
     );
   },
 );
 
 const styles = StyleSheet.create({
-  wrapper: {
+  scrollView: {
     flex: 1,
+    backgroundColor: theme.colors.background,
+  },
+  wrapper: {
     flexDirection: "row",
     alignItems: "stretch",
     justifyContent: "center",
-    backgroundColor: theme.colors.background,
   },
   progress: {
     position: "absolute",
@@ -86,11 +82,11 @@ const styles = StyleSheet.create({
     height: 4,
     backgroundColor: theme.colors.tertiary,
   },
-  scrollView: {
+  container: {
     flex: 1,
     maxWidth: 500,
   },
-  container: {
+  content: {
     padding: 8,
     rowGap: 8,
   },
