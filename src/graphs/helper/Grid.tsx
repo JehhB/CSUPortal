@@ -50,14 +50,13 @@ function getGridDefaults(props: GridProps): Required<GridProps> {
 const _ADD = (a: number, b: number) => a + b;
 
 function getRowDimension(
-  props: Required<GridProps>,
+  props: Required<
+    Pick<GridProps, "x" | "y" | "h" | "w" | "rowWeight" | "rows">
+  >,
   row: number,
-  rowWeightTotal?: number,
+  rowWeightTotal: number,
 ) {
   if (row >= props.rows) return null;
-
-  if (rowWeightTotal === undefined)
-    rowWeightTotal = props.rowWeight.reduce(_ADD);
 
   const rowWeightBefore = props.rowWeight.reduce(
     (a, b, i) => (i < row ? a + b : a),
@@ -75,14 +74,13 @@ function getRowDimension(
 }
 
 function getColDimension(
-  props: Required<GridProps>,
+  props: Required<
+    Pick<GridProps, "x" | "y" | "h" | "w" | "colWeight" | "cols">
+  >,
   col: number,
-  colWeightTotal?: number,
+  colWeightTotal: number,
 ) {
   if (col >= props.cols) return null;
-
-  if (colWeightTotal === undefined)
-    colWeightTotal = props.colWeight.reduce(_ADD);
 
   const colWeightBefore = props.colWeight.reduce(
     (a, b, i) => (i < col ? a + b : a),
@@ -100,15 +98,9 @@ function getColDimension(
 }
 
 function getCellDimension(
-  props: Required<GridProps>,
-  row: number,
-  col: number,
-  rowWeightTotal?: number,
-  colWeightTotal?: number,
+  rowDimension: GridDimension | null,
+  colDimension: GridDimension | null,
 ) {
-  const rowDimension = getRowDimension(props, row, rowWeightTotal);
-  const colDimension = getColDimension(props, col, colWeightTotal);
-
   if (rowDimension === null || colDimension === null) return null;
 
   return {
@@ -124,15 +116,15 @@ export default function Grid(_props: GridProps) {
   const {
     w,
     h,
-    cols,
-    rows,
-    colWeight,
-    rowWeight,
     x,
     y,
     gridColor,
     outlineColor,
     children,
+    rows,
+    cols,
+    rowWeight,
+    colWeight,
   } = props;
 
   if (rows !== rowWeight.length)
@@ -140,21 +132,30 @@ export default function Grid(_props: GridProps) {
   if (cols !== colWeight.length)
     throw new Error("Number of col doesn't match length of weights");
 
-  const colWeightTotal = colWeight.reduce(_ADD);
   const rowWeightTotal = rowWeight.reduce(_ADD);
+  const colWeightTotal = colWeight.reduce(_ADD);
 
   const _getRowDimension = useCallback(
-    (row: number) => getRowDimension(props, row, rowWeightTotal),
-    [rows, rowWeight, x, y, h, w],
+    (row: number) => {
+      const rowProps = { w, h, x, y, rows, rowWeight };
+      return getRowDimension(rowProps, row, rowWeightTotal);
+    },
+    [w, h, x, y, rows, rowWeight, rowWeightTotal],
   );
   const _getColDimension = useCallback(
-    (col: number) => getColDimension(props, col, colWeightTotal),
-    [cols, colWeight, x, y, h, w],
+    (col: number) => {
+      const colProps = { w, h, x, y, cols, colWeight };
+      return getColDimension(colProps, col, colWeightTotal);
+    },
+    [w, h, x, y, cols, colWeight, colWeightTotal],
   );
   const _getCellDimension = useCallback(
-    (row: number, col: number) =>
-      getCellDimension(props, row, col, rowWeightTotal, colWeightTotal),
-    [rows, cols, rowWeight, colWeight, x, y],
+    (row: number, col: number) => {
+      const rowDim = _getRowDimension(row);
+      const colDim = _getColDimension(col);
+      return getCellDimension(rowDim, colDim);
+    },
+    [_getRowDimension, _getColDimension],
   );
 
   const gridHandle: GridHandle = {

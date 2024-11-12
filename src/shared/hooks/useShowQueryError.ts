@@ -8,9 +8,9 @@ export default function useShowQueryError(
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const prevErrorStatesRef = useRef<boolean[]>([]);
 
-  const isErrors = queries.map((q) => q.isError);
-
   useEffect(() => {
+    const isErrors = queries.map((q) => q.isError);
+
     if (!hasError) {
       let hasNewError = false;
       let errorMessage: string | null = null;
@@ -31,7 +31,7 @@ export default function useShowQueryError(
     }
 
     prevErrorStatesRef.current = isErrors;
-  }, [isErrors]);
+  }, [queries, hasError]);
 
   const dismissError = () => {
     showError(false);

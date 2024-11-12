@@ -77,7 +77,7 @@ export default function Signin() {
   }));
 
   useEffect(() => {
-    if (isSplash == true) return;
+    if (isSplash === true) return;
     let cancelled = false;
     window.setTimeout(() => {
       if (cancelled) return;

@@ -17,7 +17,8 @@ function getSem(periodCode: string): number | "summer" {
     if (s === undefined) return 0;
 
     return Number.parseInt(s);
-  } catch (_e) {
+  } catch (e) {
+    console.warn(e);
     return 0;
   }
 }

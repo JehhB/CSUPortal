@@ -29,4 +29,6 @@ const Surface = forwardRef<View, SurfaceProps>((props, ref) => {
   );
 });
 
+Surface.displayName = "Surface";
+
 export default Surface;

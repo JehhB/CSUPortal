@@ -4,7 +4,7 @@ import Surface from "@/shared/components/Surface";
 import useStudentCompletion from "@/student/completion/useStudentCompletion";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import Snackbar from "@/shared/components/Snackbar";
@@ -26,10 +26,10 @@ export default function HomeScreen() {
     gwaQuery,
   ]);
 
-  function refetch() {
+  const refetch = useCallback(() => {
     gwaQuery.refetch();
     completionQuery.refetch();
-  }
+  }, [gwaQuery, completionQuery]);
 
   const isRefetching = gwaQuery.isRefetching || completionQuery.isRefetching;
 
@@ -39,7 +39,7 @@ export default function HomeScreen() {
     });
 
     return unsubscribe;
-  }, [navigation]);
+  }, [refetch, navigation]);
 
   const completion = completionQuery.data;
   const progress =

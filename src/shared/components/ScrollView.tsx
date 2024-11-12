@@ -92,4 +92,6 @@ const styles = StyleSheet.create({
   },
 });
 
+ScrollView.displayName = "ScrollView";
+
 export default ScrollView;

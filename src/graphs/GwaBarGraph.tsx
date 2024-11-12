@@ -38,7 +38,7 @@ const SEM_COLORS = new Map<number | "summer" | "__default__", ColorValue>([
 ]);
 
 function getSemLabel(sem: number | "summer"): string {
-  if (sem == "summer") return "Summer";
+  if (sem === "summer") return "Summer";
   return toOrdinal(sem) + " Semester";
 }
 

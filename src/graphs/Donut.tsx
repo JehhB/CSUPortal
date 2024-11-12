@@ -49,7 +49,7 @@ export default function Donut(props: DonutProps) {
   useEffect(() => {
     const target = -90 + 360 * progress;
     angleEnd.value = withTiming(target, { duration: 300 });
-  }, [progress]);
+  }, [angleEnd, progress]);
 
   return (
     <Svg width={d} height={d} viewBox={viewBox} style={[props.style]}>

@@ -24,7 +24,7 @@ export default function Bar(props: BarProps) {
       duration: 300,
       easing: Easing.out(Easing.cubic),
     });
-  }, [targetWidth]);
+  }, [width, targetWidth]);
 
   return <AnimatedRect {...rectProps} width={width} />;
 }

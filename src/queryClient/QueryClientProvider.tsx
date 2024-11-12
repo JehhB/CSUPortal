@@ -42,7 +42,7 @@ export default function QueryClientProvider(props: { children?: ReactNode }) {
     <TanstackQueryClientProvider client={queryClient}>
       {props.children}
       {__DEV__ &&
-        (Platform.OS == "web" ? <ReactQueryDevtools /> : <DevToolsBubble />)}
+        (Platform.OS === "web" ? <ReactQueryDevtools /> : <DevToolsBubble />)}
     </TanstackQueryClientProvider>
   );
 }

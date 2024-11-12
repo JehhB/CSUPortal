@@ -8,8 +8,7 @@ export class StudentGwaError extends Error {
 }
 
 export type StudentGwa = {
-  [year: string]: Array<
-    Array<{
+  [year: string]: {
       ID: number;
       Year: number;
       Section: string;
@@ -19,8 +18,7 @@ export type StudentGwa = {
       SubjectsEarned: string | number;
       GradesEarned: number | null;
       PeriodCode: string;
-    }>
-  >;
+    }[][];
 };
 
 const gwaService = {

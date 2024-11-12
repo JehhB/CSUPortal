@@ -29,11 +29,11 @@ function fillMissingSem(
   sems: StudentGwaPerSem["sems"],
 ): StudentGwaPerSem["sems"] {
   const result = [...sems];
-  const expectedSems = NORMAL_SEMESTERS.filter((v) => v[0] == year).map(
+  const expectedSems = NORMAL_SEMESTERS.filter((v) => v[0] === year).map(
     (v) => v[1],
   );
   const missingSems = expectedSems.filter(
-    (v) => !result.some((sem) => sem.sem == v),
+    (v) => !result.some((sem) => sem.sem === v),
   );
 
   missingSems.forEach((v) => {

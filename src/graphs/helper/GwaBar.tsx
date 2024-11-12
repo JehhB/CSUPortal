@@ -3,9 +3,10 @@ import { StudentGwaNormalized } from "@/student/gwa/normalizeGwa";
 import { GridHandle } from "./Grid";
 import { G, Rect, Text } from "react-native-svg";
 import { RopaSansRegular } from "@/shared/constants/themes";
-import { ColorValue, Platform } from "react-native";
+import { ColorValue } from "react-native";
 import Bar from "./Bar";
 import { TouchableProps } from "react-native-svg";
+import onPressProp from "./onPressProp";
 
 export type BarColors = Map<number | "summer" | "__default__", ColorValue>;
 
@@ -42,9 +43,7 @@ export default function GwaBar({
     unitHeight * index + paddingY + rowDimension.y;
   const barWidth = (gwa: number) => (gwa / 100) * rowDimension.w;
 
-  const touchableProp: TouchableProps = {};
-  if (Platform.OS === "web") touchableProp.onClick = () => onPress(gwa);
-  else touchableProp.onPress = () => onPress(gwa);
+  const touchableProp: TouchableProps = onPressProp(() => onPress(gwa));
 
   return (
     <>
