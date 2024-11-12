@@ -3,6 +3,7 @@ import { StyleProp, ViewStyle } from "react-native";
 import { Circle, Path, Svg, Text } from "react-native-svg";
 import { RopaSansRegular, theme } from "@/shared/constants/themes";
 import Animated, {
+  clamp,
   useAnimatedProps,
   useSharedValue,
   withTiming,
@@ -24,7 +25,7 @@ const DEFAULT_RING_WIDTH = 16;
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 export default function Donut(props: DonutProps) {
-  const progress = props.progress ?? 0;
+  const progress = clamp(0.001, props.progress ?? 0, 0.999);
 
   const d = props.diameter ?? DEFAULT_DIAMETER;
   const r = d / 2;
