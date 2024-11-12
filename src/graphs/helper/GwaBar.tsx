@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useId } from "react";
 import { StudentGwaNormalized } from "@/student/gwa/normalizeGwa";
 import { GridHandle } from "./Grid";
-import { G, Rect, Text } from "react-native-svg";
+import { ClipPath, Defs, G, Rect, Text } from "react-native-svg";
 import { RopaSansRegular } from "@/shared/constants/themes";
 import { ColorValue } from "react-native";
 import Bar from "./Bar";
@@ -44,6 +44,7 @@ export default function GwaBar({
   const barWidth = (gwa: number) => (gwa / 100) * rowDimension.w;
 
   const touchableProp: TouchableProps = onPressProp(() => onPress(gwa));
+  const clipId = useId();
 
   return (
     <>
@@ -70,11 +71,22 @@ export default function GwaBar({
               barColors.get("__default__") ??
               "#000000"
             }
+            clipPath={`url(#${clipId})`}
           />
         ))}
+        <Defs>
+          <ClipPath id={clipId}>
+            <Rect
+              x={x}
+              y={rowDimension.y}
+              width={rowDimension.w}
+              height={rowDimension.h}
+            />
+          </ClipPath>
+        </Defs>
         <Rect
           {...touchableProp}
-          opacity={0}
+          opacity={0.0}
           x={x}
           y={rowDimension.y}
           width={rowDimension.w}

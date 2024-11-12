@@ -24,7 +24,7 @@ const style = StyleSheet.create({
     textTransform: "capitalize",
   },
   menu: {
-    backgroundColor: theme.colors.surface,
+    backgroundColor: theme.colors.elevation.level1,
     borderColor: theme.colors.onSurface,
     borderStyle: "solid",
     borderWidth: 1,

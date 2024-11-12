@@ -1,6 +1,7 @@
+import toOrdinal from "@/util/toOrdinal";
 import { StudentGwaPerSem } from "./perSemGwa";
 
-const NORMAL_SEMESTERS: [year: number, sem: number][] = [
+const NORMAL_SEMESTERS: [year: number, sem: number | "summer"][] = [
   [1, 1],
   [1, 2],
   [2, 1],
@@ -11,17 +12,10 @@ const NORMAL_SEMESTERS: [year: number, sem: number][] = [
   [4, 2],
 ];
 
-const YEAR_LABELS = new Map<number, string>([
-  [1, "1st year"],
-  [2, "2nd year"],
-  [3, "3rd year"],
-  [4, "4th year"],
-]);
-
-const DEFAULT_YEAR_LABEL = "Extra";
-
 export type StudentGwaNormalized = StudentGwaPerSem & {
   label: string;
+  totalUnits: number;
+  yearAverage: number | null;
 };
 
 function fillMissingSem(
@@ -57,11 +51,27 @@ function fillMissingSem(
 export default function normalizeGwa(
   gwaPerSem: StudentGwaPerSem[],
 ): StudentGwaNormalized[] {
-  const result: StudentGwaNormalized[] = gwaPerSem.map((gwa) => ({
-    year: gwa.year,
-    label: YEAR_LABELS.get(gwa.year) ?? DEFAULT_YEAR_LABEL,
-    sems: fillMissingSem(gwa.year, gwa.sems),
-  }));
+  const result: StudentGwaNormalized[] = gwaPerSem
+    .map((gwa) => ({
+      year: gwa.year,
+      label: toOrdinal(gwa.year) + " year",
+      sems: fillMissingSem(gwa.year, gwa.sems),
+    }))
+    .map((gwa) => {
+      const grade = gwa.sems.reduce(
+        (a, b) => ({
+          gwa: a.gwa + (b.gwa ?? 0) * b.units,
+          units: b.gwa !== null && b.gwa > 0 ? a.units + b.units : 0,
+        }),
+        { gwa: 0, units: 0 },
+      );
+
+      return {
+        ...gwa,
+        yearAverage: grade.units > 0 ? grade.gwa / grade.units : null,
+        totalUnits: grade.units,
+      };
+    });
 
   const expectedYears = NORMAL_SEMESTERS.map((v) => v[0]).filter(
     (x, i, a) => a.indexOf(x) === i,
@@ -73,8 +83,10 @@ export default function normalizeGwa(
   missingYears.forEach((year) => {
     result.push({
       year,
-      label: YEAR_LABELS.get(year) ?? DEFAULT_YEAR_LABEL,
+      label: toOrdinal(year) + " year",
       sems: fillMissingSem(year, []),
+      yearAverage: null,
+      totalUnits: 0,
     });
   });
 

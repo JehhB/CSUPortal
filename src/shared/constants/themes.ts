@@ -71,12 +71,21 @@ export const theme: MD3Theme = {
     surfaceDisabled: "#572318",
     onSurfaceDisabled: "#fbff95",
 
-    background: "#fffff5",
+    background: "#ffffff",
     error: "#7f1d1d",
     errorContainer: "#7f1d1d",
 
     outline: "#1c1917",
     outlineVariant: "#292524",
+
+    elevation: {
+      level0: "#fffffe",
+      level1: "#fffff5",
+      level2: "#fffeeb",
+      level3: "#fffee2",
+      level4: "#fffed8",
+      level5: "#fffdcf",
+    },
 
     /*
     onSurfaceVariant: string,

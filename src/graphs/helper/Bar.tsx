@@ -12,6 +12,7 @@ type BarProps = {
   width: number;
   height: number;
   fill: ColorValue;
+  clipPath?: string;
 };
 
 export default function Bar(props: BarProps) {

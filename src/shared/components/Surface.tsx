@@ -2,13 +2,10 @@ import React, { forwardRef } from "react";
 import { Surface as MaterialSurface, SurfaceProps } from "react-native-paper";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../constants/themes";
-import color from "color";
 
 const styles = StyleSheet.create({
   surface: {
-    backgroundColor: color(theme.colors.surface)
-      .mix(color(theme.colors.background), 0.7)
-      .string(),
+    backgroundColor: theme.colors.elevation.level1,
     borderRadius: theme.roundness,
     paddingVertical: 16,
     paddingHorizontal: 8,

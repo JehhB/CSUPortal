@@ -9,15 +9,25 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { Text as MaterialText } from "react-native-paper";
+import {
+  Button,
+  Divider,
+  Text as MaterialText,
+  Portal,
+} from "react-native-paper";
 import { Svg, Text } from "react-native-svg";
 import { Dimension, getDimension } from "./helper/getDimension";
 import { clamp } from "./helper/clamp";
 import Grid from "./helper/Grid";
 import GwaBar from "./helper/GwaBar";
-import { RopaSansRegular, theme } from "@/shared/constants/themes";
+import {
+  RopaSansRegular,
+  RopaSansRegularItalic,
+  theme,
+} from "@/shared/constants/themes";
 import minByFn from "./helper/minByFn";
 import toOrdinal from "@/util/toOrdinal";
+import Dialog from "@/shared/components/Dialog";
 
 export type GwaBarGraphProps = {
   gwa: StudentGwaNormalized[];
@@ -49,6 +59,9 @@ const TICKS_HEIGHT = 24;
 const TICK_FONTSIZE = 12;
 
 export default function GwaBarGraph(props: GwaBarGraphProps) {
+  const [dialogShown, showDialog] = useState(false);
+  const [dialogGwa, setDialogGwa] = useState<StudentGwaNormalized | null>(null);
+
   const {
     gwa,
     width: targetWidth = "100%",
@@ -101,75 +114,160 @@ export default function GwaBarGraph(props: GwaBarGraphProps) {
   });
 
   return (
-    <View
-      onLayout={onContainerLayout}
-      style={[styles.container, props.containerStyle]}
-    >
-      <Svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
-        <Grid
-          w={gridWidth}
-          h={gridHeight}
-          x={LABEL_WIDTH}
-          y={1}
-          rows={gwa.length}
-          rowWeight={gwa.map((v) => v.sems.length)}
-          cols={numberOfTicks}
-        >
-          {(grid) => (
-            <>
-              {gwa.map((g, i) => (
-                <GwaBar
-                  key={g.year}
-                  gwa={g}
-                  row={i}
-                  grid={grid}
-                  barColors={SEM_COLORS}
-                  onPress={(gwa) => {
-                    console.log(gwa);
-                  }}
-                />
-              ))}
-              {tickLabels.map((tick, i) => {
-                const col = grid.getColDimension(i);
-                if (col === null) return null;
+    <>
+      <View
+        onLayout={onContainerLayout}
+        style={[styles.container, props.containerStyle]}
+      >
+        <Svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+          <Grid
+            w={gridWidth}
+            h={gridHeight}
+            x={LABEL_WIDTH}
+            y={1}
+            rows={gwa.length}
+            rowWeight={gwa.map((v) => v.sems.length)}
+            cols={numberOfTicks}
+          >
+            {(grid) => (
+              <>
+                {gwa.map((g, i) => (
+                  <GwaBar
+                    key={g.year}
+                    gwa={g}
+                    row={i}
+                    grid={grid}
+                    barColors={SEM_COLORS}
+                    onPress={(gwa) => {
+                      showDialog(true);
+                      setDialogGwa(gwa);
+                    }}
+                  />
+                ))}
+                {tickLabels.map((tick, i) => {
+                  const col = grid.getColDimension(i);
+                  if (col === null) return null;
 
-                return (
-                  <Text
-                    key={tick}
-                    y={col.y + col.h + 4 + TICK_FONTSIZE}
-                    x={col.x + col.w}
-                    textAnchor="middle"
-                    fontSize={TICK_FONTSIZE}
-                    fontFamily={RopaSansRegular}
-                    fill={"#44403c"}
+                  return (
+                    <Text
+                      key={tick}
+                      y={col.y + col.h + 4 + TICK_FONTSIZE}
+                      x={col.x + col.w}
+                      textAnchor="middle"
+                      fontSize={TICK_FONTSIZE}
+                      fontFamily={RopaSansRegular}
+                      fill={"#44403c"}
+                    >
+                      {tick}
+                    </Text>
+                  );
+                })}
+              </>
+            )}
+          </Grid>
+        </Svg>
+        <View style={[styles.legends, { maxWidth }]}>
+          {orderedLegends.map((legend) => (
+            <View key={legend} style={styles.legend}>
+              <View
+                style={[
+                  styles.legendColor,
+                  {
+                    backgroundColor:
+                      SEM_COLORS.get(legend) ?? SEM_COLORS.get("__default__"),
+                  },
+                ]}
+              />
+              <MaterialText variant="labelLarge" style={styles.legendLabel}>
+                {getSemLabel(legend)}
+              </MaterialText>
+            </View>
+          ))}
+        </View>
+      </View>
+      <Portal>
+        <Dialog
+          visible={dialogShown && dialogGwa !== null}
+          onDismiss={() => showDialog(false)}
+        >
+          {dialogGwa && (
+            <>
+              <Dialog.Title>
+                {dialogGwa.label} General Weighted Average
+              </Dialog.Title>
+
+              <Dialog.Content>
+                {dialogGwa.sems.length > 0 ? (
+                  <>
+                    {dialogGwa.sems.map((sem) => (
+                      <View
+                        key={`${dialogGwa.year}-${sem.sem}`}
+                        style={styles.details}
+                      >
+                        <View
+                          style={[
+                            styles.legendColor,
+                            {
+                              backgroundColor:
+                                SEM_COLORS.get(sem.sem) ??
+                                SEM_COLORS.get("__default__"),
+                            },
+                          ]}
+                        />
+                        <MaterialText
+                          variant="titleMedium"
+                          style={styles.detailsLabel}
+                        >
+                          {getSemLabel(sem.sem)}:
+                        </MaterialText>
+                        <MaterialText
+                          variant="titleMedium"
+                          style={styles.detailsInfo}
+                        >
+                          {sem.gwa === null || sem.gwa === 0
+                            ? "No grade yet"
+                            : sem.gwa.toFixed(2)}{" "}
+                          ({sem.units} units)
+                        </MaterialText>
+                      </View>
+                    ))}
+                    <Divider />
+                    <View style={styles.details}>
+                      <MaterialText
+                        variant="titleMedium"
+                        style={styles.detailsTotal}
+                      >
+                        Year Average:
+                      </MaterialText>
+                      <MaterialText
+                        variant="titleMedium"
+                        style={styles.detailsInfo}
+                      >
+                        {dialogGwa.yearAverage === null ||
+                        dialogGwa.yearAverage === 0
+                          ? "No grades yet"
+                          : dialogGwa.yearAverage.toFixed(2)}{" "}
+                        ({dialogGwa.totalUnits} units earned)
+                      </MaterialText>
+                    </View>
+                  </>
+                ) : (
+                  <MaterialText
+                    variant="titleMedium"
+                    style={styles.detailsInfo}
                   >
-                    {tick}
-                  </Text>
-                );
-              })}
+                    No grade information yet
+                  </MaterialText>
+                )}
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={() => showDialog(false)}>Dismiss</Button>
+              </Dialog.Actions>
             </>
           )}
-        </Grid>
-      </Svg>
-      <View style={[styles.legends, { maxWidth }]}>
-        {orderedLegends.map((legend) => (
-          <View key={legend} style={styles.legend}>
-            <View
-              style={[
-                styles.legendColor,
-                {
-                  backgroundColor:
-                    SEM_COLORS.get(legend) ?? SEM_COLORS.get("__default__"),
-                },
-              ]}
-            />
-            <MaterialText variant="labelLarge" style={styles.legendLabel}>
-              {getSemLabel(legend)}
-            </MaterialText>
-          </View>
-        ))}
-      </View>
-    </View>
+        </Dialog>
+      </Portal>
+    </>
   );
 }
 
@@ -200,5 +298,21 @@ const styles = StyleSheet.create({
   legendLabel: {
     lineHeight: 14,
     fontSize: 14,
+  },
+  details: {
+    flexDirection: "row",
+    flexWrap: "nowrap",
+    alignItems: "center",
+  },
+  detailsLabel: {
+    marginStart: 8,
+  },
+  detailsInfo: {
+    fontFamily: RopaSansRegularItalic,
+    color: "#44403c",
+    marginStart: 8,
+  },
+  detailsTotal: {
+    marginStart: 20,
   },
 });

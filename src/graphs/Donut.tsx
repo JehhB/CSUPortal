@@ -29,7 +29,7 @@ export default function Donut(props: DonutProps) {
 
   const d = props.diameter ?? DEFAULT_DIAMETER;
   const r = d / 2;
-  const viewBox = `${-r} ${-r} ${d} ${d}`;
+  const viewBox = `${-r - 1} ${-r - 1} ${d + 2} ${d + 2}`;
 
   const strokeWidth = props.strokeWidth ?? DEFAULT_RING_WIDTH;
 
