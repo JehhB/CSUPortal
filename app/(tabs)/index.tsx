@@ -42,12 +42,14 @@ export default function HomeScreen() {
   }, [navigation]);
 
   const completion = completionQuery.data;
-  const progress = completion
-    ? completion.FinishedSubjects / completion.SubjectCount
-    : 0;
-  const progressCount = completion
-    ? `${completion.FinishedSubjects}/${completion.SubjectCount}`
-    : "No subject found";
+  const progress =
+    completion && completion.SubjectCount > 0
+      ? completion.FinishedSubjects / completion.SubjectCount
+      : 0;
+  const progressCount =
+    completion && completion.SubjectCount > 0
+      ? `${completion.FinishedSubjects}/${completion.SubjectCount}`
+      : "No subject found";
   const curriculum = completion ? completion.CurriculumCode : "No curriculum";
 
   const progressPercentage = `${Math.round(progress * 100)} %`;
@@ -112,7 +114,7 @@ const styles = StyleSheet.create({
   },
   completionGraph: {
     paddingHorizontal: 8,
-    flexShrink: 1,
+    flex: 1,
   },
   completionInfo: {
     flex: 1,

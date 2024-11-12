@@ -182,7 +182,6 @@ export default function Grid(_props: GridProps) {
   return (
     <>
       <Path d={path} fill="transparent" stroke={gridColor} />
-      {typeof children === "function" ? children(gridHandle) : children}
       <Rect
         x={x}
         y={y}
@@ -192,6 +191,7 @@ export default function Grid(_props: GridProps) {
         stroke={outlineColor}
         strokeWidth={1.5}
       />
+      {typeof children === "function" ? children(gridHandle) : children}
     </>
   );
 }

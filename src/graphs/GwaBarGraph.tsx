@@ -39,7 +39,7 @@ const SEM_COLORS = new Map<number | "summer" | "__default__", ColorValue>([
 
 function getSemLabel(sem: number | "summer"): string {
   if (sem == "summer") return "Summer";
-  return toOrdinal(sem);
+  return toOrdinal(sem) + " Semester";
 }
 
 const FACTORS_100 = [1, 2, 4, 5, 10, 20, 50, 100];
@@ -69,6 +69,7 @@ export default function GwaBarGraph(props: GwaBarGraphProps) {
   const height = clamp(minHeight, width * aspectRatio, maxHeight);
 
   const onContainerLayout = (e: LayoutChangeEvent) => {
+    if (e.nativeEvent.layout.width === 0) return;
     setContainerWidth(e.nativeEvent.layout.width);
   };
 
@@ -123,6 +124,9 @@ export default function GwaBarGraph(props: GwaBarGraphProps) {
                   row={i}
                   grid={grid}
                   barColors={SEM_COLORS}
+                  onPress={(gwa) => {
+                    console.log(gwa);
+                  }}
                 />
               ))}
               {tickLabels.map((tick, i) => {

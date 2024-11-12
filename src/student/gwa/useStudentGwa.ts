@@ -11,11 +11,10 @@ export default function useStudentGwa(accessToken: string | null) {
     queryKey: [STUDENT_GWA_QUERY_KEY, accessToken],
     queryFn: () => gwaService.get(accessToken),
     enabled: accessToken !== null,
-    initialData: () => ({}),
   });
 
   const normalizedGwa = useMemo(() => {
-    const gwa = perSemGwa(gwaQuery.data);
+    const gwa = perSemGwa(gwaQuery.data ?? {});
     return normalizeGwa(gwa);
   }, [gwaQuery.data]);
 

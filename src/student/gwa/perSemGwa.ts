@@ -36,6 +36,7 @@ export default function perSemGwa(record: StudentGwa): StudentGwaPerSem[] {
         gwa:
           val.GradesEarned === null ? null : val.GradesEarned / val.UnitsEarned,
         units: val.UnitsEarned,
+        gradeTotal: val.GradesEarned ?? 0,
       })),
     };
     perSem.push(gwa);

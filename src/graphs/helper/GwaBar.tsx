@@ -3,8 +3,9 @@ import { StudentGwaNormalized } from "@/student/gwa/normalizeGwa";
 import { GridHandle } from "./Grid";
 import { G, Rect, Text } from "react-native-svg";
 import { RopaSansRegular } from "@/shared/constants/themes";
-import { ColorValue } from "react-native";
+import { ColorValue, Platform } from "react-native";
 import Bar from "./Bar";
+import { TouchableProps } from "react-native-svg";
 
 export type BarColors = Map<number | "summer" | "__default__", ColorValue>;
 
@@ -13,19 +14,26 @@ export type GwaBarProp = {
   row: number;
   grid: GridHandle;
   barColors: BarColors;
+  onPress: (gwa: StudentGwaNormalized) => void;
 };
 
 const FONT_SIZE = 16;
 const BAR_SPACE_RATIO = 0.5;
 
-export default function GwaBar({ gwa, row, grid, barColors }: GwaBarProp) {
+export default function GwaBar({
+  gwa,
+  row,
+  grid,
+  barColors,
+  onPress,
+}: GwaBarProp) {
   const rowDimension = grid.getRowDimension(row);
   if (rowDimension === null) return null;
 
   const textPaddingY = (rowDimension.h - FONT_SIZE) / 2;
   const textBaseline = rowDimension.y + textPaddingY + FONT_SIZE;
 
-  const x = rowDimension.x;
+  const x = rowDimension.x + 1.5;
 
   const unitHeight = rowDimension.h / gwa.sems.length;
   const barHeight = unitHeight * BAR_SPACE_RATIO;
@@ -33,6 +41,10 @@ export default function GwaBar({ gwa, row, grid, barColors }: GwaBarProp) {
   const barY = (index: number) =>
     unitHeight * index + paddingY + rowDimension.y;
   const barWidth = (gwa: number) => (gwa / 100) * rowDimension.w;
+
+  const touchableProp: TouchableProps = {};
+  if (Platform.OS === "web") touchableProp.onClick = () => onPress(gwa);
+  else touchableProp.onPress = () => onPress(gwa);
 
   return (
     <>
@@ -61,6 +73,14 @@ export default function GwaBar({ gwa, row, grid, barColors }: GwaBarProp) {
             }
           />
         ))}
+        <Rect
+          {...touchableProp}
+          opacity={0}
+          x={x}
+          y={rowDimension.y}
+          width={rowDimension.w}
+          height={rowDimension.h}
+        />
       </G>
     </>
   );
