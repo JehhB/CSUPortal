@@ -9,10 +9,12 @@ import { StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import Snackbar from "@/shared/components/Snackbar";
 import Donut from "@/graphs/Donut";
-import { theme } from "@/shared/constants/themes";
+import { RopaSansRegularItalic, theme } from "@/shared/constants/themes";
 import useStudentGwa from "@/student/gwa/useStudentGwa";
 import useShowQueryError from "@/shared/hooks/useShowQueryError";
 import GwaBarGraph from "@/graphs/GwaBarGraph";
+import useStudentChecklist from "@/student/checklist/useStudentChecklist";
+import currentGrade from "@/student/checklist/currentGrade";
 
 export default function HomeScreen() {
   const navigation = useNavigation<BottomTabNavigationProp<ParamListBase>>();
@@ -20,18 +22,24 @@ export default function HomeScreen() {
   const { accessToken } = useAuth();
   const { completionQuery } = useStudentCompletion(accessToken);
   const { gwaQuery, normalizedGwa } = useStudentGwa(accessToken);
+  const { checklistQuery } = useStudentChecklist(accessToken);
 
   const { hasError, dismissError, errorMessage } = useShowQueryError([
     completionQuery,
     gwaQuery,
+    checklistQuery,
   ]);
 
   const refetch = useCallback(() => {
     gwaQuery.refetch();
     completionQuery.refetch();
-  }, [gwaQuery, completionQuery]);
+    checklistQuery.refetch();
+  }, [gwaQuery, completionQuery, checklistQuery]);
 
-  const isRefetching = gwaQuery.isRefetching || completionQuery.isRefetching;
+  const isRefetching =
+    gwaQuery.isRefetching ||
+    completionQuery.isRefetching ||
+    checklistQuery.isRefetching;
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("tabLongPress", () => {
@@ -90,6 +98,23 @@ export default function HomeScreen() {
           </Text>
           <GwaBarGraph gwa={normalizedGwa} maxWidth={350} />
         </Surface>
+        <Surface>
+          <Text variant="titleLarge" style={styles.titles}>
+            Computed General Weighted Average
+          </Text>
+          {checklistQuery.data ? (
+            <Text variant="headlineSmall" style={styles.gwaInfo}>
+              {(() => {
+                const [gwa, units] = currentGrade(checklistQuery.data);
+                return `${gwa.toFixed(2)} (${units} units)`;
+              })()}
+            </Text>
+          ) : (
+            <Text variant="titleLarge" style={styles.gwaInfo}>
+              No grade data
+            </Text>
+          )}
+        </Surface>
       </ScrollView>
       <Snackbar
         visible={hasError}
@@ -131,5 +156,10 @@ const styles = StyleSheet.create({
     color: "#292524",
     fontSize: 16,
     marginBottom: 12,
+  },
+  gwaInfo: {
+    textAlign: "center",
+    fontFamily: RopaSansRegularItalic,
+    color: "#292524",
   },
 });

@@ -4,6 +4,7 @@ import {
   Dialog as MaterialDialog,
   DialogProps as MaterialDialogProps,
 } from "react-native-paper";
+import { theme } from "../constants/themes";
 
 const Dialog = (props: MaterialDialogProps) => {
   return <MaterialDialog {...props} style={[styles.dialog, props.style]} />;
@@ -20,6 +21,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: "95%",
     maxWidth: 500,
+    borderRadius: theme.roundness * 2,
+    backgroundColor: theme.colors.elevation.level2,
   },
 });
 

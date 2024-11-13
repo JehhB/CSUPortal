@@ -40,9 +40,14 @@ const completionService = {
       );
     }
 
-    const data: StudentCompletion[] = await res.json();
+    try {
+      const data: StudentCompletion[] = await res.json();
 
-    return data.at(0) ?? null;
+      return data.at(0) ?? null;
+    } catch (e) {
+      console.warn(e);
+      return null;
+    }
   },
 };
 
