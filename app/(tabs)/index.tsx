@@ -6,7 +6,7 @@ import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { DataTable, Text } from "react-native-paper";
+import { DataTable, Portal, Text } from "react-native-paper";
 import Snackbar from "@/shared/components/Snackbar";
 import Donut from "@/graphs/Donut";
 import { RopaSansRegularItalic, theme } from "@/shared/constants/themes";
@@ -18,10 +18,16 @@ import currentGrade from "@/student/checklist/currentGrade";
 import uniqBySem from "@/student/checklist/uniqBySem";
 import findLastIndex from "lodash/findLastIndex";
 import semLabel from "@/student/checklist/semLabel";
+import { AdvisedSubject } from "@/student/checklist/checklistService";
+import SubjectInfo from "@/shared/components/SubjectInfo";
 
 export default function HomeScreen() {
   const [currentSem, setCurrentSem] = useState(0);
   const navigation = useNavigation<BottomTabNavigationProp<ParamListBase>>();
+  const [currentSubject, setCurrentSubject] = useState<AdvisedSubject | null>(
+    null,
+  );
+  const [subjectDialogShown, showSubjectDialog] = useState(false);
 
   const { accessToken } = useAuth();
   const { completionQuery } = useStudentCompletion(accessToken);
@@ -183,7 +189,13 @@ export default function HomeScreen() {
               </DataTable.Title>
             </DataTable.Header>
             {currentSubjects.map((subject) => (
-              <DataTable.Row key={subject.SubjectCode}>
+              <DataTable.Row
+                key={subject.SubjectCode}
+                onPress={() => {
+                  setCurrentSubject(subject);
+                  showSubjectDialog(true);
+                }}
+              >
                 <DataTable.Cell style={styles.dataTableShort}>
                   <Text variant="labelMedium">{subject.SubjectCode}</Text>
                 </DataTable.Cell>
@@ -220,6 +232,15 @@ export default function HomeScreen() {
         onDismiss={dismissError}
         content={errorMessage ?? "Unknown error encountered"}
       />
+      <Portal>
+        <SubjectInfo
+          subject={currentSubject}
+          visible={subjectDialogShown}
+          onDismiss={() => {
+            showSubjectDialog(false);
+          }}
+        />
+      </Portal>
     </>
   );
 }
