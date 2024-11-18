@@ -22,8 +22,8 @@ export default function TabLayout() {
       unfocusedIcon: "clock-outline",
     },
     {
-      name: "checklist",
-      title: "Checklist",
+      name: "grades",
+      title: "Grades",
       focusedIcon: "format-list-bulleted-square",
       unfocusedIcon: "format-list-checkbox",
     },
