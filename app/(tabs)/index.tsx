@@ -166,7 +166,7 @@ export default function HomeScreen() {
             Advised Subjects
           </Text>
           <DataTable>
-            <DataTable.Header>
+            <DataTable.Header style={styles.dataTableThickBorder}>
               <DataTable.Title style={styles.dataTableShort}>
                 <Text variant="labelMedium" style={styles.dataTableHeader}>
                   Code
@@ -177,20 +177,27 @@ export default function HomeScreen() {
                   Subject Description
                 </Text>
               </DataTable.Title>
-              <DataTable.Title style={styles.dataTableShort}>
+              <DataTable.Title
+                style={[styles.dataTableShort, styles.dataTableRight]}
+              >
                 <Text variant="labelMedium" style={styles.dataTableHeader}>
                   Units
                 </Text>
               </DataTable.Title>
-              <DataTable.Title style={styles.dataTableShort}>
+              <DataTable.Title
+                style={[styles.dataTableShort, styles.dataTableRight]}
+              >
                 <Text variant="labelMedium" style={styles.dataTableHeader}>
                   Remarks
                 </Text>
               </DataTable.Title>
             </DataTable.Header>
-            {currentSubjects.map((subject) => (
+            {currentSubjects.map((subject, index, array) => (
               <DataTable.Row
                 key={subject.SubjectCode}
+                style={[
+                  index === array.length - 1 && styles.dataTableThickBorder,
+                ]}
                 onPress={() => {
                   setCurrentSubject(subject);
                   showSubjectDialog(true);
@@ -204,10 +211,14 @@ export default function HomeScreen() {
                     {subject.SubjectDescription}
                   </Text>
                 </DataTable.Cell>
-                <DataTable.Cell style={styles.dataTableShort}>
+                <DataTable.Cell
+                  style={[styles.dataTableShort, styles.dataTableRight]}
+                >
                   <Text variant="labelMedium">{subject.Units}</Text>
                 </DataTable.Cell>
-                <DataTable.Cell style={styles.dataTableShort}>
+                <DataTable.Cell
+                  style={[styles.dataTableShort, styles.dataTableRight]}
+                >
                   <Text variant="labelMedium">{subject.Description}</Text>
                 </DataTable.Cell>
               </DataTable.Row>
@@ -292,5 +303,11 @@ const styles = StyleSheet.create({
   },
   dataTablePagination: {
     flexWrap: "nowrap",
+  },
+  dataTableRight: {
+    justifyContent: "flex-end",
+  },
+  dataTableThickBorder: {
+    borderBottomWidth: 2,
   },
 });
