@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React from "react";
 import { StyleSheet } from "react-native";
 import {
   Dialog as MaterialDialog,

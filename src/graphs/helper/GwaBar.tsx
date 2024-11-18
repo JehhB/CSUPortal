@@ -29,6 +29,8 @@ export default function GwaBar({
   onPress,
 }: GwaBarProp) {
   const rowDimension = grid.getRowDimension(row);
+  const clipId = useId();
+
   if (rowDimension === null) return null;
 
   const textPaddingY = (rowDimension.h - FONT_SIZE) / 2;
@@ -44,7 +46,6 @@ export default function GwaBar({
   const barWidth = (gwa: number) => (gwa / 100) * rowDimension.w;
 
   const touchableProp: TouchableProps = onPressProp(() => onPress(gwa));
-  const clipId = useId();
 
   return (
     <>

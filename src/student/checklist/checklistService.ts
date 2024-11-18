@@ -63,7 +63,8 @@ const checklistService = {
     try {
       const data: ChecklistResponse = await res.json();
       return data[0] ?? null;
-    } catch (erro) {
+    } catch (error) {
+      console.warn(error);
       return null;
     }
   },

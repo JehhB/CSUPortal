@@ -69,7 +69,7 @@ export const theme: MD3Theme = {
 
     surfaceVariant: "#450a0a",
     surfaceDisabled: "#572318",
-    onSurfaceDisabled: "#fbff95",
+    onSurfaceDisabled: "#a8a29e",
 
     background: "#ffffff",
     error: "#7f1d1d",
