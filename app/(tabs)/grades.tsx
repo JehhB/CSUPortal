@@ -2,7 +2,7 @@ import useAuth from "@/auth/useAuth";
 import ScrollView from "@/shared/components/ScrollView";
 import SubjectInfo from "@/shared/components/SubjectInfo";
 import Surface from "@/shared/components/Surface";
-import { theme } from "@/shared/constants/themes";
+import { RopaSansRegularItalic, theme } from "@/shared/constants/themes";
 import useShowQueryError from "@/shared/hooks/useShowQueryError";
 import { AdvisedSubject } from "@/student/checklist/checklistService";
 import useStudentChecklist from "@/student/checklist/useStudentChecklist";
@@ -11,11 +11,16 @@ import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
-import { DataTable, Portal, Text } from "react-native-paper";
+import { Button, DataTable, Menu, Portal, Text } from "react-native-paper";
 import Snackbar from "@/shared/components/Snackbar";
 import periodLabel from "@/student/periods/periodLabel";
+import useStudentDocuments from "@/student/documents/useStudentDocuments";
+import { DocumentServiceGetOptions } from "@/student/documents/documentsService";
+import useConfirmDialog from "@/shared/hooks/useConfirmDialog";
+import { openBrowserAsync } from "expo-web-browser";
 
 export default function Grades() {
+  const [downloadMenuShown, showDownloadMenu] = useState(false);
   const [currentSubject, setCurrentSubject] = useState<AdvisedSubject | null>(
     null,
   );
@@ -28,16 +33,17 @@ export default function Grades() {
 
   const navigation = useNavigation<BottomTabNavigationProp<ParamListBase>>();
 
-  const { hasError, dismissError, errorMessage } = useShowQueryError([
-    periodQuery,
-    checklistQuery,
-  ]);
+  const { hasError, dismissError, errorMessage, showErrorMessage } =
+    useShowQueryError([periodQuery, checklistQuery]);
 
-  const refetch = useCallback(() => {
-    periodQuery.refetch();
-    checklistQuery.refetch();
+  const refetch = useCallback(
+    () => {
+      periodQuery.refetch();
+      checklistQuery.refetch();
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [checklistQuery.refetch, periodQuery.refetch]);
+    [checklistQuery.refetch, periodQuery.refetch],
+  );
 
   const isRefetching = periodQuery.isRefetching || checklistQuery.isRefetching;
 
@@ -92,6 +98,53 @@ export default function Grades() {
   const numberOfPeriods = useMemo(
     () => periodQuery.data?.length ?? 0,
     [periodQuery.data],
+  );
+
+  const { documentMutation } = useStudentDocuments();
+
+  const { ConfirmDialog, showConfirmDialog } = useConfirmDialog();
+
+  const warningMessage = useMemo(
+    () => (
+      <Text variant="bodyMedium">
+        You are about to go outside the app to view your requested document.{" "}
+        <Text variant="bodyMedium" style={styles.warningColor}>
+          Do not share the generated URL at all cause as it included your
+          credentials.
+        </Text>
+      </Text>
+    ),
+    [],
+  );
+
+  const openDocument = useCallback(
+    (options: DocumentServiceGetOptions) => {
+      showDownloadMenu(false);
+      showConfirmDialog({
+        title: "Continue outside app?",
+        description: warningMessage,
+        confirm: { disabled: true, loading: true, children: "Continue" },
+      });
+
+      documentMutation.mutate(options, {
+        onError: (error) => showErrorMessage(error.message),
+        onSuccess: (url) => {
+          showConfirmDialog((config) => ({
+            ...config,
+            confirm: {
+              ...config.confirm,
+              loading: false,
+              disabled: false,
+              onPress: () => {
+                if (url) openBrowserAsync(url);
+              },
+            },
+          }));
+        },
+      });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [documentMutation.mutate, warningMessage],
   );
 
   return (
@@ -206,6 +259,59 @@ export default function Grades() {
               showFastPaginationControls
             />
           </DataTable>
+
+          <Menu
+            anchor={
+              <Button
+                style={styles.downloadButton}
+                onPress={() => showDownloadMenu(true)}
+              >
+                <Text variant="labelMedium" style={styles.downloadButtonText}>
+                  Generate Document
+                </Text>
+              </Button>
+            }
+            anchorPosition="bottom"
+            visible={downloadMenuShown}
+            onDismiss={() => showDownloadMenu(false)}
+          >
+            <Menu.Item
+              onPress={() =>
+                openDocument({
+                  accessToken,
+                  period: currentPeriod,
+                  type: "Assesment",
+                })
+              }
+              titleStyle={theme.fonts.labelMedium}
+              title="Assesment"
+              dense
+            />
+            <Menu.Item
+              onPress={() =>
+                openDocument({
+                  accessToken,
+                  period: currentPeriod,
+                  type: "COG",
+                })
+              }
+              titleStyle={theme.fonts.labelMedium}
+              title="Certificated of Grade"
+              dense
+            />
+            <Menu.Item
+              onPress={() =>
+                openDocument({
+                  accessToken,
+                  period: currentPeriod,
+                  type: "COE",
+                })
+              }
+              titleStyle={theme.fonts.labelMedium}
+              title="Certificated of Enrollment"
+              dense
+            />
+          </Menu>
         </Surface>
       </ScrollView>
       <Snackbar
@@ -221,6 +327,7 @@ export default function Grades() {
             showSubjectDialog(false);
           }}
         />
+        <ConfirmDialog dismissable={false} />
       </Portal>
     </>
   );
@@ -251,5 +358,16 @@ const styles = StyleSheet.create({
   },
   pointerEventNone: {
     pointerEvents: "none",
+  },
+  downloadButton: {
+    alignSelf: "flex-start",
+  },
+  downloadButtonText: {
+    color: "#334155",
+    fontFamily: RopaSansRegularItalic,
+  },
+  warningColor: {
+    color: theme.colors.primary,
+    fontWeight: "600",
   },
 });

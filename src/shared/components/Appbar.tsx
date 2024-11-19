@@ -15,32 +15,6 @@ import { theme } from "@/shared/constants/themes";
 import { useState } from "react";
 import useAuth from "@/auth/useAuth";
 
-const style = StyleSheet.create({
-  appBar: {
-    backgroundColor: theme.colors.primary,
-  },
-  appBarContent: {
-    color: theme.colors.surface,
-    textTransform: "capitalize",
-  },
-  menu: {
-    backgroundColor: theme.colors.elevation.level1,
-    borderColor: theme.colors.onSurface,
-    borderStyle: "solid",
-    borderWidth: 1,
-  },
-  logo: {
-    width: 48,
-    height: 48,
-    marginEnd: 8,
-  },
-  profileButton: {
-    width: 40,
-    height: 40,
-    backgroundColor: theme.colors.surface,
-  },
-});
-
 export default function Appbar({
   route,
   options,
@@ -87,15 +61,15 @@ export default function Appbar({
   ];
 
   return (
-    <MaterialAppbar.Header style={style.appBar}>
+    <MaterialAppbar.Header style={styles.appBar}>
       <Image
         source={require("@@/assets/images/icon.png")}
         contentFit="cover"
-        style={style.logo}
+        style={styles.logo}
       />
       <MaterialAppbar.Content
         title={
-          <Text variant="headlineSmall" style={style.appBarContent}>
+          <Text variant="headlineSmall" style={styles.appBarContent}>
             {options?.title ?? route?.name ?? "Portal"}
           </Text>
         }
@@ -104,12 +78,11 @@ export default function Appbar({
         visible={visible}
         onDismiss={() => setVisible(false)}
         statusBarHeight={topInset.top}
-        contentStyle={style.menu}
         anchor={
           <IconButton
             icon="account"
             onPress={() => setVisible(true)}
-            style={style.profileButton}
+            style={styles.profileButton}
             size={36}
             iconColor={theme.colors.primary}
           />
@@ -117,7 +90,12 @@ export default function Appbar({
       >
         {menuItems.map((item, index) =>
           "divider" in item ? (
-            <Divider key={index} />
+            <Divider
+              key={index}
+              theme={{
+                colors: { outlineVariant: theme.colors.onSurfaceDisabled },
+              }}
+            />
           ) : (
             <Menu.Item
               key={index}
@@ -139,3 +117,23 @@ export default function Appbar({
     </MaterialAppbar.Header>
   );
 }
+
+const styles = StyleSheet.create({
+  appBar: {
+    backgroundColor: theme.colors.primary,
+  },
+  appBarContent: {
+    color: theme.colors.surface,
+    textTransform: "capitalize",
+  },
+  logo: {
+    width: 48,
+    height: 48,
+    marginEnd: 8,
+  },
+  profileButton: {
+    width: 40,
+    height: 40,
+    backgroundColor: theme.colors.surface,
+  },
+});

@@ -1,5 +1,5 @@
 import { UseQueryResult } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function useShowQueryError(
   queries: UseQueryResult<unknown, Error>[],
@@ -35,7 +35,16 @@ export default function useShowQueryError(
 
   const dismissError = () => {
     showError(false);
+    setErrorMessage(null);
   };
 
-  return { hasError, dismissError, errorMessage };
+  const showErrorMessage = useCallback(
+    (message: string | null) => {
+      showError(true);
+      setErrorMessage(message);
+    },
+    [showError, setErrorMessage],
+  );
+
+  return { hasError, dismissError, errorMessage, showErrorMessage };
 }

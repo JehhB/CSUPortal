@@ -40,12 +40,15 @@ export default function HomeScreen() {
     checklistQuery,
   ]);
 
-  const refetch = useCallback(() => {
-    gwaQuery.refetch();
-    completionQuery.refetch();
-    checklistQuery.refetch();
+  const refetch = useCallback(
+    () => {
+      gwaQuery.refetch();
+      completionQuery.refetch();
+      checklistQuery.refetch();
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gwaQuery.refetch, completionQuery.refetch, checklistQuery.refetch]);
+    [gwaQuery.refetch, completionQuery.refetch, checklistQuery.refetch],
+  );
 
   const isRefetching =
     gwaQuery.isRefetching ||
@@ -68,7 +71,6 @@ export default function HomeScreen() {
   const numberOfSems = useMemo(() => sems.length, [sems]);
 
   useEffect(() => {
-    console.log("triggered");
     const currentSem = findLastIndex(sems, (subj) => !!subj.PeriodTaken);
     if (currentSem !== -1) setCurrentSem(currentSem);
   }, [sems]);

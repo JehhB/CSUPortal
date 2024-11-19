@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { StyleProp, ViewStyle } from "react-native";
 import { Circle, Path, Svg, Text } from "react-native-svg";
 import { RopaSansRegular, theme } from "@/shared/constants/themes";
@@ -9,6 +9,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import createArcPath from "./helper/createArcPath";
+import onPressProp from "./helper/onPressProp";
 
 export type DonutProps = {
   progress?: number;
@@ -46,13 +47,29 @@ export default function Donut(props: DonutProps) {
     };
   });
 
+  const rerender = useCallback(
+    (progress: number) => {
+      const target = -90 + 360 * progress;
+      angleEnd.value = withTiming(target, { duration: 300 });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
   useEffect(() => {
-    const target = -90 + 360 * progress;
-    angleEnd.value = withTiming(target, { duration: 300 });
-  }, [angleEnd, progress]);
+    rerender(progress);
+  }, [rerender, progress]);
+
+  const pressProp = onPressProp(() => rerender(progress));
 
   return (
-    <Svg width={d} height={d} viewBox={viewBox} style={[props.style]}>
+    <Svg
+      width={d}
+      height={d}
+      viewBox={viewBox}
+      style={[props.style]}
+      {...pressProp}
+    >
       <Circle
         r={r}
         stroke={theme.colors.outline}
