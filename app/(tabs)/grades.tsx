@@ -3,6 +3,7 @@ import ScrollView from "@/shared/components/ScrollView";
 import SubjectInfo from "@/shared/components/SubjectInfo";
 import Surface from "@/shared/components/Surface";
 import { RopaSansRegularItalic, theme } from "@/shared/constants/themes";
+import common from "@/shared/constants/common";
 import useShowQueryError from "@/shared/hooks/useShowQueryError";
 import { AdvisedSubject } from "@/student/checklist/checklistService";
 import useStudentChecklist from "@/student/checklist/useStudentChecklist";
@@ -334,31 +335,7 @@ export default function Grades() {
 }
 
 const styles = StyleSheet.create({
-  titles: {
-    textAlign: "center",
-    color: theme.colors.primary,
-    marginBottom: 8,
-  },
-  dataTableHeader: {
-    color: "#0c0a0999",
-  },
-  dataTableShort: {
-    flexGrow: 0,
-    flexShrink: 1,
-    flexBasis: 64,
-  },
-  dataTablePagination: {
-    flexWrap: "nowrap",
-  },
-  dataTableRight: {
-    justifyContent: "flex-end",
-  },
-  dataTableThickBorder: {
-    borderBottomWidth: 2,
-  },
-  pointerEventNone: {
-    pointerEvents: "none",
-  },
+  ...common,
   downloadButton: {
     alignSelf: "flex-start",
   },

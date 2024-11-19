@@ -17,7 +17,6 @@ import {
 } from "react-native-paper";
 import { Svg, Text } from "react-native-svg";
 import { Dimension, getDimension } from "./helper/getDimension";
-import { clamp } from "./helper/clamp";
 import Grid from "./helper/Grid";
 import GwaBar from "./helper/GwaBar";
 import {
@@ -28,6 +27,7 @@ import {
 import minByFn from "./helper/minByFn";
 import toOrdinal from "@/util/toOrdinal";
 import Dialog from "@/shared/components/Dialog";
+import clamp from "lodash/clamp";
 
 export type GwaBarGraphProps = {
   gwa: StudentGwaNormalized[];
@@ -75,11 +75,11 @@ export default function GwaBarGraph(props: GwaBarGraphProps) {
   const [containerWidth, setContainerWidth] = useState(0);
 
   const width = clamp(
-    minWidth,
     getDimension(targetWidth, containerWidth),
+    minWidth,
     maxWidth,
   );
-  const height = clamp(minHeight, width * aspectRatio, maxHeight);
+  const height = clamp(width * aspectRatio, minHeight, maxHeight);
 
   const onContainerLayout = (e: LayoutChangeEvent) => {
     if (e.nativeEvent.layout.width === 0) return;

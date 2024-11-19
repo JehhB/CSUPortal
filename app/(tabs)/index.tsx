@@ -9,7 +9,8 @@ import { StyleSheet, View } from "react-native";
 import { DataTable, Portal, Text } from "react-native-paper";
 import Snackbar from "@/shared/components/Snackbar";
 import Donut from "@/graphs/Donut";
-import { RopaSansRegularItalic, theme } from "@/shared/constants/themes";
+import { RopaSansRegularItalic } from "@/shared/constants/themes";
+import common from "@/shared/constants/common";
 import useStudentGwa from "@/student/gwa/useStudentGwa";
 import useShowQueryError from "@/shared/hooks/useShowQueryError";
 import GwaBarGraph from "@/graphs/GwaBarGraph";
@@ -259,11 +260,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  titles: {
-    textAlign: "center",
-    color: theme.colors.primary,
-    marginBottom: 8,
-  },
+  ...common,
   completion: {
     flexDirection: "row",
     alignItems: "center",
@@ -294,22 +291,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: RopaSansRegularItalic,
     color: "#292524",
-  },
-  dataTableHeader: {
-    color: "#0c0a0999",
-  },
-  dataTableShort: {
-    flexGrow: 0,
-    flexShrink: 1,
-    flexBasis: 64,
-  },
-  dataTablePagination: {
-    flexWrap: "nowrap",
-  },
-  dataTableRight: {
-    justifyContent: "flex-end",
-  },
-  dataTableThickBorder: {
-    borderBottomWidth: 2,
   },
 });

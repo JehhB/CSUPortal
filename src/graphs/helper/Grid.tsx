@@ -1,5 +1,5 @@
 import { theme } from "@/shared/constants/themes";
-import { ReactNode, useCallback } from "react";
+import { ReactNode, useCallback, useMemo } from "react";
 import { ColorValue } from "react-native";
 import { Path, Rect } from "react-native-svg";
 
@@ -21,6 +21,7 @@ export type GridHandle = {
   getRowDimension: (row: number) => GridDimension | null;
   getColDimension: (col: number) => GridDimension | null;
   getCellDimension: (row: number, col: number) => GridDimension | null;
+  getUnitDimension: (x: number, y: number) => GridDimension | null;
 };
 
 type GridDimension = {
@@ -48,6 +49,30 @@ function getGridDefaults(props: GridProps): Required<GridProps> {
 }
 
 const _ADD = (a: number, b: number) => a + b;
+
+function getUnitDimension(
+  props: Required<Pick<GridProps, "x" | "y" | "h" | "w">>,
+  pos: [x: number, y: number],
+  rowWeightTotal: number,
+  colWeightTotal: number,
+) {
+  const [x, y] = pos;
+  if (y >= rowWeightTotal) return null;
+  if (x >= colWeightTotal) return null;
+
+  const unitWidth = props.w / colWeightTotal;
+  const unitHeight = props.h / rowWeightTotal;
+
+  const startX = unitWidth * x + props.x;
+  const startY = unitHeight * y + props.y;
+
+  return {
+    x: startX,
+    y: startY,
+    w: unitWidth,
+    h: unitHeight,
+  };
+}
 
 function getRowDimension(
   props: Required<
@@ -132,9 +157,16 @@ export default function Grid(_props: GridProps) {
   if (cols !== colWeight.length)
     throw new Error("Number of col doesn't match length of weights");
 
-  const rowWeightTotal = rowWeight.reduce(_ADD);
-  const colWeightTotal = colWeight.reduce(_ADD);
+  const rowWeightTotal = useMemo(() => rowWeight.reduce(_ADD), [rowWeight]);
+  const colWeightTotal = useMemo(() => colWeight.reduce(_ADD), [colWeight]);
 
+  const _getUnitDimension = useCallback(
+    (_x: number, _y: number) => {
+      const props = { w, h, x, y };
+      return getUnitDimension(props, [_x, _y], rowWeightTotal, colWeightTotal);
+    },
+    [w, h, x, y, rowWeightTotal, colWeightTotal],
+  );
   const _getRowDimension = useCallback(
     (row: number) => {
       const rowProps = { w, h, x, y, rows, rowWeight };
@@ -158,11 +190,15 @@ export default function Grid(_props: GridProps) {
     [_getRowDimension, _getColDimension],
   );
 
-  const gridHandle: GridHandle = {
-    getRowDimension: _getRowDimension,
-    getColDimension: _getColDimension,
-    getCellDimension: _getCellDimension,
-  };
+  const gridHandle: GridHandle = useMemo(
+    () => ({
+      getRowDimension: _getRowDimension,
+      getColDimension: _getColDimension,
+      getCellDimension: _getCellDimension,
+      getUnitDimension: _getUnitDimension,
+    }),
+    [_getColDimension, _getRowDimension, _getCellDimension, _getUnitDimension],
+  );
 
   let path = "";
 

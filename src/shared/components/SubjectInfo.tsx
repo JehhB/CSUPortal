@@ -25,7 +25,7 @@ export default function SubjectInfo(props: SubjectInfoProps) {
             Prerequisite:
           </Text>
           <Text variant="titleMedium" style={styles.detailsInfo}>
-            None
+            {subject.PreRequisiteCode ?? "None"}
           </Text>
         </View>
 
