@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Platform } from "react-native";
 import { TSpan, Text, TextProps } from "react-native-svg";
 
+export type TextChild = (number | string | undefined) | TextChild[];
+
 export type WrappedTextProps = Omit<
   TextProps,
   "children" | "x" | "y" | "inlineSize" | "fill" | "fontSize"
@@ -10,7 +12,7 @@ export type WrappedTextProps = Omit<
   x?: number;
   y?: number;
   inlineSize?: number;
-  children?: string;
+  children?: TextChild;
   fill?: string;
   fontSize?: number;
 };
@@ -48,15 +50,16 @@ function WrappedTextWeb(props: WrappedTextProps) {
 
 function WrappedTextNative(props: WrappedTextProps) {
   const { inlineSize, children, ...textProps } = props;
+  const inlineSizeProp = Platform.OS !== "web" ? { inlineSize } : {};
   return (
     <Text transform={[{ translateY: props.fontSize ?? 16 }]} {...textProps}>
-      <TSpan inlineSize={inlineSize}>{children}</TSpan>
+      <TSpan {...inlineSizeProp}>{children}</TSpan>
     </Text>
   );
 }
 
 export default function WrappedText(props: WrappedTextProps) {
-  return Platform.OS === "web" ? (
+  return Platform.OS === "web" && "inlineSize" in props ? (
     <WrappedTextWeb {...props} />
   ) : (
     <WrappedTextNative {...props} />

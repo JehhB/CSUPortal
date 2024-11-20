@@ -1,5 +1,6 @@
 import splitAt from "@/util/splitAt";
 import clamp from "lodash/clamp";
+import sortBy from "lodash/sortBy";
 
 export type Schedule = {
   day: number;
@@ -35,7 +36,12 @@ export default function parseSchedString(scheduleStr: string): Schedule[] {
     }
   }
 
-  return result;
+  return sortBy(result, [
+    (s) => s.day,
+    (s) => s.timeStart,
+    (s) => s.timeEnd,
+    (s) => s.room,
+  ]);
 }
 
 function expandDays(dayStr: string): number[] {
