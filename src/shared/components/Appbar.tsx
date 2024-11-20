@@ -38,14 +38,6 @@ export default function Appbar({
       onPress: () => {},
     },
     {
-      divider: true,
-    },
-    {
-      title: "Enrollment",
-      icon: "account-details-outline",
-      onPress: () => {},
-    },
-    {
       title: "Change password",
       icon: "account-edit-outline",
       onPress: () => {},
