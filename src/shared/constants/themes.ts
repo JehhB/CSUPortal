@@ -76,7 +76,7 @@ export const theme: MD3Theme = {
     errorContainer: "#7f1d1d",
 
     outline: "#1c1917",
-    outlineVariant: "#292524",
+    outlineVariant: "#a8a29e",
 
     elevation: {
       level0: "#fffffe",

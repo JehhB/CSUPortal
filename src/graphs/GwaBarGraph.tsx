@@ -94,9 +94,9 @@ export default function GwaBarGraph(props: GwaBarGraphProps) {
   });
 
   const tickInterval = 100 / numberOfTicks;
-  const tickLabels = Array(numberOfTicks)
+  const tickLabels = Array(numberOfTicks + 1)
     .fill(1)
-    .map((_, i) => tickInterval * (i + 1));
+    .map((_, i) => tickInterval * i);
 
   const legends = new Set<number | "summer">();
   gwa.forEach((g) => {
@@ -128,6 +128,7 @@ export default function GwaBarGraph(props: GwaBarGraphProps) {
             rows={gwa.length}
             rowWeight={gwa.map((v) => v.sems.length)}
             cols={numberOfTicks}
+            inset={[0, 0, -5, 0]}
           >
             {(grid) => (
               <>
@@ -152,7 +153,7 @@ export default function GwaBarGraph(props: GwaBarGraphProps) {
                     <Text
                       key={tick}
                       y={col.y + col.h + 4 + TICK_FONTSIZE}
-                      x={col.x + col.w}
+                      x={col.x}
                       textAnchor="middle"
                       fontSize={TICK_FONTSIZE}
                       fontFamily={RopaSansRegular}

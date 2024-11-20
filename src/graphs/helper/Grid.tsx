@@ -1,7 +1,6 @@
 import { theme } from "@/shared/constants/themes";
 import { ReactNode, useCallback, useMemo } from "react";
-import { ColorValue } from "react-native";
-import { Path, Rect } from "react-native-svg";
+import { Path, CommonPathProps } from "react-native-svg";
 
 export type GridProps = {
   w: number;
@@ -12,8 +11,10 @@ export type GridProps = {
   rowWeight?: number[];
   x?: number;
   y?: number;
-  outlineColor?: ColorValue;
-  gridColor?: ColorValue;
+  insets?: number | [number, number] | [number, number, number, number];
+  outlineProps?: CommonPathProps;
+  gridProps?: CommonPathProps;
+  pathProps?: CommonPathProps;
   children?: ((grid: GridHandle) => ReactNode) | ReactNode;
 };
 
@@ -40,9 +41,11 @@ function getGridDefaults(props: GridProps): Required<GridProps> {
       rowWeight: Array(props.rows ?? 1).fill(1),
       x: 0,
       y: 0,
-      outlineColor: theme.colors.outline,
-      gridColor: "#a8a29e",
+      pathProps: {},
+      outlineProps: {},
+      gridProps: {},
       children: null,
+      insets: 0,
     },
     props,
   );
@@ -57,8 +60,8 @@ function getUnitDimension(
   colWeightTotal: number,
 ) {
   const [x, y] = pos;
-  if (y >= rowWeightTotal) return null;
-  if (x >= colWeightTotal) return null;
+  if (y > rowWeightTotal) return null;
+  if (x > colWeightTotal) return null;
 
   const unitWidth = props.w / colWeightTotal;
   const unitHeight = props.h / rowWeightTotal;
@@ -81,7 +84,7 @@ function getRowDimension(
   row: number,
   rowWeightTotal: number,
 ) {
-  if (row >= props.rows) return null;
+  if (row > props.rows) return null;
 
   const rowWeightBefore = props.rowWeight.reduce(
     (a, b, i) => (i < row ? a + b : a),
@@ -105,7 +108,7 @@ function getColDimension(
   col: number,
   colWeightTotal: number,
 ) {
-  if (col >= props.cols) return null;
+  if (col > props.cols) return null;
 
   const colWeightBefore = props.colWeight.reduce(
     (a, b, i) => (i < col ? a + b : a),
@@ -143,8 +146,9 @@ export default function Grid(_props: GridProps) {
     h,
     x,
     y,
-    gridColor,
-    outlineColor,
+    pathProps,
+    gridProps,
+    outlineProps,
     children,
     rows,
     cols,
@@ -200,33 +204,73 @@ export default function Grid(_props: GridProps) {
     [_getColDimension, _getRowDimension, _getCellDimension, _getUnitDimension],
   );
 
-  let path = "";
+  const insets = useMemo((): [
+    top: number,
+    right: number,
+    bottom: number,
+    left: number,
+  ] => {
+    const i = props.insets;
+    if (typeof i === "number") return [i, i, i, i];
+    if (i.length === 2) return [i[0], i[1], i[0], i[1]];
+    return i;
+  }, [props.insets]);
 
-  const unitWidth = w / colWeightTotal;
-  let colX = x;
-  for (let i = 0; i < cols - 1; ++i) {
-    colX += unitWidth * colWeight[i];
-    path += `M ${colX} ${y} L ${colX} ${y + h} `;
-  }
+  const gridPath = useMemo(() => {
+    let path = "";
 
-  const unitHeight = h / rowWeightTotal;
-  let rowY = y;
-  for (let i = 0; i < rows - 1; ++i) {
-    rowY += unitHeight * rowWeight[i];
-    path += `M ${x} ${rowY} L ${x + w} ${rowY} `;
-  }
+    const unitWidth = w / colWeightTotal;
+    let colX = x;
+    for (let i = 0; i < cols - 1; ++i) {
+      colX += unitWidth * colWeight[i];
+      path += `M ${colX} ${y + insets[0]} L ${colX} ${y + h - insets[2]} `;
+    }
+
+    const unitHeight = h / rowWeightTotal;
+    let rowY = y;
+    for (let i = 0; i < rows - 1; ++i) {
+      rowY += unitHeight * rowWeight[i];
+      path += `M ${x + insets[3]} ${rowY} L ${x + w - insets[1]} ${rowY} `;
+    }
+    return path;
+  }, [
+    w,
+    h,
+    x,
+    y,
+    colWeightTotal,
+    rowWeightTotal,
+    colWeight,
+    rowWeight,
+    rows,
+    cols,
+    insets,
+  ]);
+
+  const outlinePath = useMemo(() => {
+    return `
+    M ${x + insets[3]} ${y} L ${x + w - insets[1]} ${y}
+    M ${x + insets[3]} ${y + h} L ${x + w - insets[1]} ${y + h}
+    M ${x} ${y + insets[0]} L ${x} ${y + h - insets[2]}
+    M ${x + w} ${y + insets[0]} L ${x + w} ${y + h - insets[2]}
+    `;
+  }, [x, y, h, w, insets]);
 
   return (
     <>
-      <Path d={path} fill="transparent" stroke={gridColor} />
-      <Rect
-        x={x}
-        y={y}
-        width={w}
-        height={h}
+      <Path
+        d={gridPath}
         fill="transparent"
-        stroke={outlineColor}
-        strokeWidth={1.5}
+        stroke={theme.colors.outlineVariant}
+        {...pathProps}
+        {...gridProps}
+      />
+      <Path
+        d={outlinePath}
+        fill="transparent"
+        stroke={theme.colors.outline}
+        {...pathProps}
+        {...outlineProps}
       />
       {typeof children === "function" ? children(gridHandle) : children}
     </>

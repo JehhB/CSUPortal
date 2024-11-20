@@ -10,6 +10,7 @@ import useShowQueryError from "@/shared/hooks/useShowQueryError";
 import { StyleSheet } from "react-native";
 import common from "@/shared/constants/common";
 import { Text } from "react-native-paper";
+import ClassSchedule from "@/graphs/ClassSchedule";
 
 export default function HomeScreen() {
   const { accessToken } = useAuth();
@@ -42,8 +43,9 @@ export default function HomeScreen() {
       <ScrollView refreshing={scheduleQuery.isRefetching} onRefresh={refetch}>
         <Surface>
           <Text variant="titleLarge" style={styles.titles}>
-            Schedule
+            Class Schedule
           </Text>
+          <ClassSchedule classSchedule={scheduleQuery.data} maxWidth={350} />
         </Surface>
       </ScrollView>
       <Snackbar

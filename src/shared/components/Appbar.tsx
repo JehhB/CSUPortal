@@ -90,12 +90,7 @@ export default function Appbar({
       >
         {menuItems.map((item, index) =>
           "divider" in item ? (
-            <Divider
-              key={index}
-              theme={{
-                colors: { outlineVariant: theme.colors.onSurfaceDisabled },
-              }}
-            />
+            <Divider key={index} />
           ) : (
             <Menu.Item
               key={index}

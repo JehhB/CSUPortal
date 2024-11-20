@@ -36,7 +36,7 @@ export default function GwaBar({
   const textPaddingY = (rowDimension.h - FONT_SIZE) / 2;
   const textBaseline = rowDimension.y + textPaddingY + FONT_SIZE;
 
-  const x = rowDimension.x + 1.5;
+  const x = rowDimension.x + 1;
 
   const unitHeight = rowDimension.h / gwa.sems.length;
   const barHeight = unitHeight * BAR_SPACE_RATIO;
