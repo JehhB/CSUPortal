@@ -27,7 +27,11 @@
       "output": "single",
       "favicon": "./assets/images/icon.png"
     },
-    "plugins": ["expo-router", "expo-asset"],
+    "plugins": [
+      "expo-router",
+      "expo-asset",
+      "expo-font"
+    ],
     "experiments": {
       "typedRoutes": true
     },

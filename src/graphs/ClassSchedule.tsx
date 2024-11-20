@@ -241,7 +241,16 @@ export default function ClassSchedule(props: ClassScheduleProps) {
             </>
           )}
           <Dialog.Actions style={styles.dialogActions}>
-            <Button onPress={() => showDialog(false)}>Dismiss</Button>
+            <Button
+              onPress={() => showDialog(false)}
+              theme={{
+                colors: {
+                  primary: subject ? subject[1] : theme.colors.primary,
+                },
+              }}
+            >
+              Dismiss
+            </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

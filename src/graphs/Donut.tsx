@@ -8,7 +8,6 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import createArcPath from "./helper/createArcPath";
-import onPressProp from "./helper/onPressProp";
 import clamp from "lodash/clamp";
 
 export type DonutProps = {
@@ -60,15 +59,13 @@ export default function Donut(props: DonutProps) {
     rerender(progress);
   }, [rerender, progress]);
 
-  const pressProp = onPressProp(() => rerender(progress));
-
   return (
     <Svg
       width={d}
       height={d}
       viewBox={viewBox}
       style={[props.style]}
-      {...pressProp}
+      onPress={() => rerender(progress)}
     >
       <Circle
         r={r}

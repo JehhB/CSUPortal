@@ -40,7 +40,7 @@ export default function HomeScreen() {
 
   return (
     <>
-      <ScrollView refreshing={scheduleQuery.isRefetching} onRefresh={refetch}>
+      <ScrollView refreshing={scheduleQuery.isFetching} onRefresh={refetch}>
         <Surface>
           <Text variant="titleLarge" style={styles.titles}>
             Class Schedule

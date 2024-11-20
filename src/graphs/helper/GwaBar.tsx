@@ -6,7 +6,6 @@ import { RopaSansRegular } from "@/shared/constants/themes";
 import { ColorValue } from "react-native";
 import Bar from "./Bar";
 import { TouchableProps } from "react-native-svg";
-import onPressProp from "./onPressProp";
 
 export type BarColors = Map<number | "summer" | "__default__", ColorValue>;
 
@@ -44,8 +43,6 @@ export default function GwaBar({
   const barY = (index: number) =>
     unitHeight * index + paddingY + rowDimension.y;
   const barWidth = (gwa: number) => (gwa / 100) * rowDimension.w;
-
-  const touchableProp: TouchableProps = onPressProp(() => onPress(gwa));
 
   return (
     <>
@@ -86,7 +83,7 @@ export default function GwaBar({
           </ClipPath>
         </Defs>
         <Rect
-          {...touchableProp}
+          onPress={() => onPress(gwa)}
           opacity={0.0}
           x={x}
           y={rowDimension.y}

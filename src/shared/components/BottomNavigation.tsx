@@ -71,7 +71,7 @@ export default function BottomNavigation({
           </Text>
         );
       }}
-      renderIcon={({ route, focused, color }) => {
+      renderIcon={({ route, focused }) => {
         const { options } = descriptors[route.key];
         if (options.tabBarIcon) {
           return options.tabBarIcon({

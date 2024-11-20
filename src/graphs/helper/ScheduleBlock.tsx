@@ -3,7 +3,6 @@ import { GridHandle } from "./Grid";
 import { Schedule } from "@/student/schedule/parseSchedString";
 import { SubjectSchedule } from "@/student/schedule/scheduleService";
 import { RopaSansRegular, theme } from "@/shared/constants/themes";
-import onPressProp from "./onPressProp";
 import { useId } from "react";
 import WrappedText from "./WrappedText";
 import { t12h } from "@/student/schedule/t12h";
@@ -33,7 +32,6 @@ export default function ScheduleBlock(props: ScheduleBlockProps) {
   if (pos === null) return;
   const height = pos.h * (sched.timeEnd - sched.timeStart);
 
-  const pressProps = onPressProp(props.onPress);
   const clipArea = {
     x: pos.x + BLOCK_MARGIN + BLOCK_PADDING,
     y: pos.y + BLOCK_MARGIN + BLOCK_PADDING,
@@ -42,7 +40,7 @@ export default function ScheduleBlock(props: ScheduleBlockProps) {
   };
 
   return (
-    <G {...pressProps}>
+    <G onPress={props.onPress}>
       <Defs>
         <ClipPath id={clipPath}>
           <Rect {...clipArea} />

@@ -51,10 +51,10 @@ export default function HomeScreen() {
     [gwaQuery.refetch, completionQuery.refetch, checklistQuery.refetch],
   );
 
-  const isRefetching =
-    gwaQuery.isRefetching ||
-    completionQuery.isRefetching ||
-    checklistQuery.isRefetching;
+  const isFetching =
+    gwaQuery.isFetching ||
+    completionQuery.isFetching ||
+    checklistQuery.isFetching;
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("tabLongPress", () => {
@@ -113,7 +113,7 @@ export default function HomeScreen() {
 
   return (
     <>
-      <ScrollView refreshing={isRefetching} onRefresh={refetch}>
+      <ScrollView refreshing={isFetching} onRefresh={refetch}>
         <Surface>
           <Text variant="titleLarge" style={styles.titles}>
             Current Progress

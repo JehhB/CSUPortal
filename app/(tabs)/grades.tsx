@@ -46,7 +46,7 @@ export default function Grades() {
     [checklistQuery.refetch, periodQuery.refetch],
   );
 
-  const isRefetching = periodQuery.isRefetching || checklistQuery.isRefetching;
+  const isFetching = periodQuery.isFetching || checklistQuery.isFetching;
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("tabLongPress", () => {
@@ -150,7 +150,7 @@ export default function Grades() {
 
   return (
     <>
-      <ScrollView refreshing={isRefetching} onRefresh={refetch}>
+      <ScrollView refreshing={isFetching} onRefresh={refetch}>
         <Surface>
           <Text variant="titleLarge" style={styles.titles}>
             Advised Subjects
