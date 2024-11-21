@@ -7,11 +7,7 @@
     "icon": "./assets/images/icon-bg.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#450a0a"
-    },
+    "newArchEnabled": "true",
     "ios": {
       "supportsTablet": true
     },
@@ -30,7 +26,15 @@
     "plugins": [
       "expo-router",
       "expo-asset",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/adaptive-icon.png",
+          "backgroundColor": "#450a0a",
+          "imageWidth": 288
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
