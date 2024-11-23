@@ -53,7 +53,7 @@ export default function Signin() {
 
     loginMutation.mutate(credentials, {
       onSuccess: () => {
-        router.replace("/(tabs)");
+        router.replace("/home");
       },
       onError: () => {
         showError(true);

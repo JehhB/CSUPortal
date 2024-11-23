@@ -22,7 +22,7 @@ import semLabel from "@/student/checklist/semLabel";
 import { AdvisedSubject } from "@/student/checklist/checklistService";
 import SubjectInfo from "@/shared/components/SubjectInfo";
 
-export default function HomeScreen() {
+export default function Home() {
   const [currentSem, setCurrentSem] = useState(0);
   const navigation = useNavigation<BottomTabNavigationProp<ParamListBase>>();
   const [currentSubject, setCurrentSubject] = useState<AdvisedSubject | null>(

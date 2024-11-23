@@ -1,16 +1,16 @@
 import { Redirect, Tabs } from "expo-router";
 import { Icon } from "react-native-paper";
 import React from "react";
-import Appbar from "@/shared/components/Appbar";
 import BottomNavigation from "@/shared/components/BottomNavigation";
+import Appbar from "@/shared/components/Appbar";
 import useAuth from "@/auth/useAuth";
 
-export default function TabLayout() {
+export default function HomeLayout() {
   const { isAuthenticated } = useAuth();
 
   const routes = [
     {
-      name: "index",
+      name: "home",
       title: "Home",
       focusedIcon: "home",
       unfocusedIcon: "home-outline",
@@ -35,7 +35,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: true,
-        header: (props) => <Appbar {...props} />,
+        header: (props) => <Appbar title={props.options.title ?? "Home"} />,
       }}
       tabBar={BottomNavigation}
     >

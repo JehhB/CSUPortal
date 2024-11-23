@@ -10,15 +10,12 @@ import { Image } from "expo-image";
 import { StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
+import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { theme } from "@/shared/constants/themes";
 import { useState } from "react";
 import useAuth from "@/auth/useAuth";
 
-export default function Appbar({
-  route,
-  options,
-}: Partial<BottomTabHeaderProps>) {
+export default function Appbar({ title }: { title: string }) {
   const [visible, setVisible] = useState(false);
   const topInset = useSafeAreaInsets();
   const { logout } = useAuth();
@@ -62,7 +59,7 @@ export default function Appbar({
       <MaterialAppbar.Content
         title={
           <Text variant="headlineSmall" style={styles.appBarContent}>
-            {options?.title ?? route?.name ?? "Portal"}
+            {title}
           </Text>
         }
       />
