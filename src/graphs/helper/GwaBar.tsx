@@ -5,7 +5,6 @@ import { ClipPath, Defs, G, Rect, Text } from "react-native-svg";
 import { RopaSansRegular } from "@/shared/constants/themes";
 import { ColorValue } from "react-native";
 import Bar from "./Bar";
-import { TouchableProps } from "react-native-svg";
 
 export type BarColors = Map<number | "summer" | "__default__", ColorValue>;
 

@@ -1,9 +1,16 @@
-import React, { useMemo, useState } from "react";
+import React, {
+  RefObject,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { SubjectSchedule } from "@/student/schedule/scheduleService";
 import { Svg, Text } from "react-native-svg";
 import { Dimension, getDimension } from "./helper/getDimension";
 import {
   LayoutChangeEvent,
+  Platform,
   StyleProp,
   StyleSheet,
   View,
@@ -11,13 +18,19 @@ import {
 } from "react-native";
 import clamp from "lodash/clamp";
 import Grid from "./helper/Grid";
-import { RopaSansRegular, theme } from "@/shared/constants/themes";
+import {
+  RopaSansRegular,
+  RopaSansRegularItalic,
+  theme,
+} from "@/shared/constants/themes";
 import ScheduleBlock from "./helper/ScheduleBlock";
 import scheduleColor from "./helper/scheduleColor";
 import { Schedule } from "@/student/schedule/parseSchedString";
 import { Button, Portal, Text as MaterialText } from "react-native-paper";
 import Dialog from "@/shared/components/Dialog";
 import { t12h } from "@/student/schedule/t12h";
+import { captureRef } from "react-native-view-shot";
+import * as Sharing from "expo-sharing";
 
 export type ClassScheduleProps = {
   classSchedule?: SubjectSchedule[] | null | undefined;
@@ -28,6 +41,7 @@ export type ClassScheduleProps = {
   minHeight?: number;
   maxHeight?: number;
   containerStyle?: StyleProp<ViewStyle>;
+  showError?: (error: string) => void;
 };
 
 const MARGIN_TOP = 32;
@@ -64,10 +78,66 @@ const Y_LABEL = [
 ];
 const X_LABEL_FONTSIZE = 16;
 const Y_LABEL_FONTSIZE = 12;
-const SVG_WIDHT = 400;
+const SVG_WIDTH = 400;
 const SVG_HEIGHT = 640;
 
+async function onDownloadNative(svgRef: RefObject<Svg | null>) {
+  const image = await captureRef(svgRef, {
+    quality: 1.0,
+    width: SVG_WIDTH * 2,
+    height: SVG_HEIGHT * 2,
+    format: "png",
+    result: "tmpfile",
+  });
+
+  await Sharing.shareAsync(image, {
+    mimeType: "image/png",
+    dialogTitle: "Share schedule",
+    UTI: "schedule.png",
+  });
+}
+
+async function onDownloadWeb(svgRef: RefObject<Svg | null>) {
+  const svgElement = svgRef.current;
+  if (!svgElement) return;
+
+  const element = svgElement.elementRef as RefObject<SVGElement | undefined>;
+  const svg = element.current;
+  if (!svg) return;
+
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  if (ctx === null) return;
+
+  const data = new XMLSerializer().serializeToString(svg);
+  const svgBlob = new Blob([data], { type: "image/svg+xml;charset=utf-8" });
+  const url = URL.createObjectURL(svgBlob);
+
+  const img = new Image();
+  img.onload = () => {
+    // Set canvas dimensions
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    // Draw SVG on canvas
+    ctx.drawImage(img, 0, 0);
+
+    // Convert to PNG and download
+    const pngUrl = canvas.toDataURL("image/png");
+    const downloadLink = document.createElement("a");
+    downloadLink.download = "image.png";
+    downloadLink.href = pngUrl;
+    downloadLink.click();
+
+    // Cleanup
+    URL.revokeObjectURL(url);
+  };
+
+  img.src = url;
+}
+
 export default function ClassSchedule(props: ClassScheduleProps) {
+  const svgRef = useRef<Svg | null>(null);
   const [dialogShown, showDialog] = useState(false);
   const [subject, setSubject] = useState<[SubjectSchedule, string] | null>(
     null,
@@ -96,7 +166,7 @@ export default function ClassSchedule(props: ClassScheduleProps) {
   );
   const height = clamp(width * aspectRatio, minHeight, maxHeight);
 
-  const gridWidth = SVG_WIDHT - MARGIN_LEFT - 8;
+  const gridWidth = SVG_WIDTH - MARGIN_LEFT - 8;
   const gridHeight = SVG_HEIGHT - MARGIN_TOP - 8;
 
   const schedules = useMemo(
@@ -115,6 +185,24 @@ export default function ClassSchedule(props: ClassScheduleProps) {
     [classSchedule],
   );
 
+  const onDownload = useCallback(
+    async () => {
+      try {
+        if (Platform.OS !== "web") {
+          onDownloadNative(svgRef);
+        } else {
+          onDownloadWeb(svgRef);
+        }
+      } catch (error) {
+        console.warn(error);
+        if (props.showError)
+          props.showError("Failed to capture schedule image");
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [svgRef, props.showError],
+  );
+
   return (
     <>
       <View
@@ -122,9 +210,10 @@ export default function ClassSchedule(props: ClassScheduleProps) {
         onLayout={onContainerLayout}
       >
         <Svg
+          ref={svgRef}
           width={width}
           height={height}
-          viewBox={`0 0 ${SVG_WIDHT} ${SVG_HEIGHT}`}
+          viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
         >
           <Grid
             x={MARGIN_LEFT}
@@ -198,6 +287,11 @@ export default function ClassSchedule(props: ClassScheduleProps) {
             )}
           </Grid>
         </Svg>
+        <Button style={styles.downloadButton} onPress={() => onDownload()}>
+          <MaterialText variant="labelMedium" style={styles.downloadButtonText}>
+            Download schedule
+          </MaterialText>
+        </Button>
       </View>
       <Portal>
         <Dialog
@@ -275,5 +369,13 @@ const styles = StyleSheet.create({
   scheduleItem: {
     marginStart: 8,
     marginBottom: 4,
+  },
+  downloadButton: {
+    marginTop: 16,
+    alignSelf: "flex-start",
+  },
+  downloadButtonText: {
+    color: "#334155",
+    fontFamily: RopaSansRegularItalic,
   },
 });

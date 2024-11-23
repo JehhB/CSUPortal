@@ -10,7 +10,6 @@ import { Image } from "expo-image";
 import { StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { theme } from "@/shared/constants/themes";
 import { useState } from "react";
 import useAuth from "@/auth/useAuth";

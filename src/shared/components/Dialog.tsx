@@ -7,7 +7,13 @@ import {
 import { theme } from "../constants/themes";
 
 const Dialog = (props: MaterialDialogProps) => {
-  return <MaterialDialog {...props} style={[styles.dialog, props.style]} />;
+  return (
+    <MaterialDialog
+      dismissable={false}
+      {...props}
+      style={[styles.dialog, props.style]}
+    />
+  );
 };
 
 Dialog.Actions = MaterialDialog.Actions;
