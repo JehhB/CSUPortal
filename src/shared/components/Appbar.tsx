@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { theme } from "@/shared/constants/themes";
 import { useState } from "react";
 import useAuth from "@/auth/useAuth";
+import { router } from "expo-router";
 
 export default function Appbar({ title }: { title: string }) {
   const [visible, setVisible] = useState(false);
@@ -36,7 +37,9 @@ export default function Appbar({ title }: { title: string }) {
     {
       title: "Change password",
       icon: "account-edit-outline",
-      onPress: () => {},
+      onPress: () => {
+        router.navigate("/profile/change-password");
+      },
     },
     {
       divider: true,

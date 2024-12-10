@@ -21,6 +21,7 @@ import { TouchableOpacity } from "react-native";
 import FadeZoomOut from "@/shared/animations/FadeZoomOut";
 import FadeZoomIn from "@/shared/animations/FadeZoomIn";
 import Snackbar from "@/shared/components/Snackbar";
+import PasswordInput from "@/shared/components/PasswordInput";
 
 export default function Signin() {
   const [isSplash, setSplash] = useState(true);
@@ -168,7 +169,7 @@ export default function Signin() {
                 returnKeyType="next"
                 blurOnSubmit={false}
               />
-              <TextInput
+              <PasswordInput
                 ref={(ref) => (inputRefs.current[1] = ref)}
                 label="Password"
                 value={credentials.password}
@@ -176,9 +177,8 @@ export default function Signin() {
                   setCredentials((cred) => ({ ...cred, password: text }));
                 }}
                 onSubmitEditing={login}
-                autoComplete="password"
+                autoComplete="current-password"
                 keyboardType="default"
-                secureTextEntry={true}
                 returnKeyType="done"
               />
               <Button
