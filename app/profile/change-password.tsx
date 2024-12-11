@@ -176,7 +176,11 @@ export default function ChangePassword() {
             satisfied={notCommonPassword}
           />
           {criterias.map((criteria) => (
-            <Criteria label={criteria[0]} satisfied={criteria[1]} />
+            <Criteria
+              key={criteria[0]}
+              label={criteria[0]}
+              satisfied={criteria[1]}
+            />
           ))}
           <Button
             disabled={

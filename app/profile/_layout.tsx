@@ -11,7 +11,7 @@ export default function ProfileLayout() {
     <Stack
       screenOptions={{
         headerShown: true,
-        header: () => <Appbar title="Profile" />,
+        header: () => <Appbar title="Profile" canGoBack />,
       }}
     />
   );

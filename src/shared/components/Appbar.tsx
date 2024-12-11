@@ -5,6 +5,8 @@ import {
   Text,
   Icon,
   Divider,
+  Avatar,
+  TouchableRipple,
 } from "react-native-paper";
 import { Image } from "expo-image";
 import { StyleSheet } from "react-native";
@@ -14,8 +16,18 @@ import { theme } from "@/shared/constants/themes";
 import { useState } from "react";
 import useAuth from "@/auth/useAuth";
 import { router } from "expo-router";
+import useStudentPictures from "@/student/profile/useStudentPictures";
 
-export default function Appbar({ title }: { title: string }) {
+export default function Appbar({
+  title,
+  canGoBack,
+}: {
+  title: string;
+  canGoBack?: boolean;
+}) {
+  const { accessToken } = useAuth();
+  const { picturesQuery } = useStudentPictures(accessToken);
+
   const [visible, setVisible] = useState(false);
   const topInset = useSafeAreaInsets();
   const { logout } = useAuth();
@@ -53,11 +65,21 @@ export default function Appbar({ title }: { title: string }) {
 
   return (
     <MaterialAppbar.Header style={styles.appBar}>
-      <Image
-        source={require("@@/assets/images/icon.png")}
-        contentFit="cover"
-        style={styles.logo}
-      />
+      {canGoBack === true ? (
+        <MaterialAppbar.BackAction
+          color={theme.colors.surface}
+          style={styles.back}
+          onPress={() =>
+            router.canGoBack() ? router.back() : router.navigate("/home")
+          }
+        />
+      ) : (
+        <Image
+          source={require("@@/assets/images/icon.png")}
+          contentFit="cover"
+          style={styles.logo}
+        />
+      )}
       <MaterialAppbar.Content
         title={
           <Text variant="headlineSmall" style={styles.appBarContent}>
@@ -70,13 +92,22 @@ export default function Appbar({ title }: { title: string }) {
         onDismiss={() => setVisible(false)}
         statusBarHeight={topInset.top}
         anchor={
-          <IconButton
-            icon="account"
-            onPress={() => setVisible(true)}
-            style={styles.profileButton}
-            size={36}
-            iconColor={theme.colors.primary}
-          />
+          picturesQuery.data && picturesQuery.data.profpic ? (
+            <TouchableRipple onPress={() => setVisible(true)}>
+              <Avatar.Image
+                source={{ uri: picturesQuery.data.profpic }}
+                size={36}
+              />
+            </TouchableRipple>
+          ) : (
+            <IconButton
+              icon="account"
+              onPress={() => setVisible(true)}
+              style={styles.profileButton}
+              size={36}
+              iconColor={theme.colors.primary}
+            />
+          )
         }
       >
         {menuItems.map((item, index) =>
@@ -86,7 +117,10 @@ export default function Appbar({ title }: { title: string }) {
             <Menu.Item
               key={index}
               dense
-              onPress={item.onPress}
+              onPress={() => {
+                setVisible(false);
+                item.onPress();
+              }}
               title={item.title}
               titleStyle={theme.fonts.titleMedium}
               leadingIcon={({ size }) => (
@@ -121,5 +155,8 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     backgroundColor: theme.colors.surface,
+  },
+  back: {
+    backgroundColor: "transparent",
   },
 });
