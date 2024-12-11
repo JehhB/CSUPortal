@@ -27,6 +27,18 @@ const common = StyleSheet.create({
   pointerEventNone: {
     pointerEvents: "none",
   },
+  bgTransparent: {
+    backgroundColor: "transparent",
+  },
+  colorPrimary: {
+    color: theme.colors.primary,
+  },
+  colorSecondary: {
+    color: theme.colors.secondary,
+  },
+  colorTertiary: {
+    color: theme.colors.tertiary,
+  },
 });
 
 export default common;

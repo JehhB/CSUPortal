@@ -14,8 +14,8 @@ import {
   isLongerThan,
   isNotCommonPassword,
 } from "@/util/passwordCriterias";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { StyleSheet, TextInput, View } from "react-native";
 import { Button, HelperText, Icon, Portal, Text } from "react-native-paper";
 import Animated, {
   interpolate,
@@ -50,6 +50,8 @@ function Criteria(props: { label: string; satisfied: boolean }) {
 }
 
 export default function ChangePassword() {
+  const oldPasswordRef = useRef<TextInput | null>(null);
+
   const [pass, setPass] = useState({
     oldPassword: "",
     newPassword: "",
@@ -117,6 +119,7 @@ export default function ChangePassword() {
         onError: (e) => {
           if (e instanceof InvalidPasswordError) {
             setShowIncorrectOld(true);
+            oldPasswordRef.current?.focus();
           }
         },
         onSuccess: () => {
@@ -144,6 +147,8 @@ export default function ChangePassword() {
             Change Password
           </Text>
           <PasswordInput
+            autoComplete="current-password"
+            ref={oldPasswordRef}
             label="Old Password"
             value={pass.oldPassword}
             onChangeText={(val) => {
@@ -158,6 +163,7 @@ export default function ChangePassword() {
 
           <PasswordInput
             label="New Password"
+            autoComplete="new-password"
             value={pass.newPassword}
             onChangeText={(val) => {
               setShowIncorrectOld(false);

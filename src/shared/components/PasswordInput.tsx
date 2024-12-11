@@ -1,11 +1,9 @@
 import { forwardRef, useState } from "react";
 import { TextInput as NativeTextInput, StyleSheet } from "react-native";
 import TextInput from "./TextInput";
-import {
-  TextInput as MaterialTextInput,
-  TextInputProps,
-} from "react-native-paper";
+import { TextInputProps } from "react-native-paper";
 import { theme } from "../constants/themes";
+import common from "@/shared/constants/common";
 
 const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(
   (props, ref) => {
@@ -14,11 +12,12 @@ const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(
 
     return (
       <TextInput
+        autoCapitalize="none"
         ref={ref}
         secureTextEntry={secureTextEntry}
         right={
-          <MaterialTextInput.Icon
-            style={styles.eye}
+          <TextInput.Icon
+            style={styles.bgTransparent}
             size={20}
             icon={secureTextEntry ? "eye" : "eye-off"}
             color={theme.colors.onSurfaceVariant}
@@ -34,9 +33,7 @@ const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(
 );
 
 const styles = StyleSheet.create({
-  eye: {
-    backgroundColor: "transparent",
-  },
+  ...common,
 });
 
 PasswordInput.displayName = "PasswordInput";

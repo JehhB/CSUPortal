@@ -17,6 +17,7 @@ import { useState } from "react";
 import useAuth from "@/auth/useAuth";
 import { router } from "expo-router";
 import useStudentPictures from "@/student/profile/useStudentPictures";
+import useStudentMsAccount from "@/student/profile/useStudentMSAccount";
 
 export default function Appbar({
   title,
@@ -25,32 +26,39 @@ export default function Appbar({
   title: string;
   canGoBack?: boolean;
 }) {
-  const { accessToken } = useAuth();
+  const { accessToken, logout } = useAuth();
   const { picturesQuery } = useStudentPictures(accessToken);
 
   const [visible, setVisible] = useState(false);
   const topInset = useSafeAreaInsets();
-  const { logout } = useAuth();
+  const { msAccountQuery } = useStudentMsAccount(accessToken);
 
   const menuItems: (
     | { title: string; icon: string; onPress: () => void }
     | { divider: true }
   )[] = [
     {
-      title: "Profile",
-      icon: "account-outline",
-      onPress: () => {},
-    },
-    {
-      title: "Microsoft account",
-      icon: "email-outline",
-      onPress: () => {},
-    },
-    {
       title: "Change password",
       icon: "account-edit-outline",
       onPress: () => {
         router.navigate("/profile/change-password");
+      },
+    },
+    {
+      divider: true,
+    },
+    {
+      title: "Virtual ID",
+      icon: "badge-account-outline",
+      onPress: () => {
+        router.navigate("/profile/to-be-implemented");
+      },
+    },
+    {
+      title: "ID Scanner",
+      icon: "qrcode-scan",
+      onPress: () => {
+        router.navigate("/profile/to-be-implemented");
       },
     },
     {
@@ -63,15 +71,23 @@ export default function Appbar({
     },
   ];
 
+  if (msAccountQuery.data) {
+    menuItems.unshift({
+      title: "Microsoft account",
+      icon: "email-outline",
+      onPress: () => {
+        router.navigate("/profile/ms-account");
+      },
+    });
+  }
+
   return (
     <MaterialAppbar.Header style={styles.appBar}>
       {canGoBack === true ? (
         <MaterialAppbar.BackAction
           color={theme.colors.surface}
           style={styles.back}
-          onPress={() =>
-            router.canGoBack() ? router.back() : router.navigate("/home")
-          }
+          onPress={() => router.navigate("/home")}
         />
       ) : (
         <Image

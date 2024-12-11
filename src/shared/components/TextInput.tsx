@@ -38,8 +38,10 @@ const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, ref) => {
       underlineStyle={[styles.underlineStyle, props.underlineStyle]}
     />
   );
-});
+}) as typeof MaterialTextInput;
 
 TextInput.displayName = "TextInput";
+TextInput.Icon = MaterialTextInput.Icon;
+TextInput.Affix = MaterialTextInput.Affix;
 
 export default TextInput;

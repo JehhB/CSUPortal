@@ -1,6 +1,7 @@
 const STUDENT_PROFILE_ENDPOINT = "https://takay.csucarig.edu.ph/guid/profile";
 const STUDENT_PICTURE_ENDPOINT =
   "https://takay.csucarig.edu.ph/guid/getStudentPic";
+const STUDENT_MSACCOUNT_ENDPOINT = "https://takay.csucarig.edu.ph/getMicrosoft";
 
 export type StudentProfile = {
   ID: number;
@@ -65,6 +66,17 @@ export type ProfilePictureResponse = {
   remarks: string;
 };
 
+export type MSAccountResponse = {
+  ID: number;
+  IDNumber: string;
+  DisplayName: string;
+  Username: string;
+  Password: string;
+  CollegeCode: string;
+  created_at: string;
+  archive_at: string | null;
+};
+
 export class StudentProfileError extends Error {
   constructor(message?: string) {
     super(message);
@@ -93,7 +105,7 @@ const profileService = {
     }
 
     try {
-      const data: [StudentProfile] = await res.json();
+      const data: StudentProfile[] = await res.json();
       return data[0] ?? null;
     } catch (error) {
       console.warn(error);
@@ -123,6 +135,34 @@ const profileService = {
     try {
       const data: ProfilePictureResponse = await res.json();
       return data;
+    } catch (error) {
+      console.warn(error);
+      throw new StudentProfileError("Error encountered parsing response");
+    }
+  },
+
+  async getMSAccount(accessToken: string | null) {
+    if (accessToken == null) {
+      throw new StudentProfileError("Failed to authenticate");
+    }
+
+    const res = await fetch(STUDENT_MSACCOUNT_ENDPOINT, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!res.ok) {
+      throw new StudentProfileError(
+        "Error encountered while fetching student microsoft account",
+      );
+    }
+
+    try {
+      const data: MSAccountResponse[] = await res.json();
+      return data[0] ?? null;
     } catch (error) {
       console.warn(error);
       throw new StudentProfileError("Error encountered parsing response");
