@@ -68,7 +68,6 @@ export default function Appbar({
       onPress: () => {
         router.navigate("/profile/to-be-implemented");
       },
-      disabled: Platform.OS !== "android" && Platform.OS !== "ios",
     },
     {
       divider: true,

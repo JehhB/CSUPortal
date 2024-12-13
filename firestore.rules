@@ -1,0 +1,18 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /events/{eventId} {
+      allow create: if request.auth != null 
+                    && request.auth.token.firebase.sign_in_provider == 'anonymous'
+                    && request.resource.data.keys().hasAll(['event_name', 'random_password', 'owner'])
+                    && request.resource.data.event_name is string
+                    && request.resource.data.random_password is string
+                    && request.resource.data.owner == request.auth.uid;
+      allow read: if request.auth != null 
+      						&& request.auth.token.firebase.sign_in_provider == 'anonymous'
+                  && (request.auth.uid == resource.data.owner
+                    || request.query.random_password == resource.data.random_password);
+    }
+  }
+}

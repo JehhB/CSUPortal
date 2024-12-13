@@ -15,7 +15,7 @@ import Dialog from "@/shared/components/Dialog";
 
 export type StudentIdProps = {
   profile: StudentProfile | null;
-  pictures: ProfilePictureResponse;
+  pictures: ProfilePictureResponse | null;
 };
 
 const DPI = 130;
@@ -136,7 +136,7 @@ export default function StudentId({ profile, pictures }: StudentIdProps) {
             x={PADDING}
             y={72}
             href={
-              pictures.profpic !== null
+              pictures?.profpic
                 ? { uri: pictures.profpic }
                 : require("@@/assets/images/no-profile.png")
             }
@@ -189,7 +189,7 @@ export default function StudentId({ profile, pictures }: StudentIdProps) {
             Name
           </Text>
 
-          {pictures.esig !== null && (
+          {pictures?.esig && (
             <Image
               x={0}
               y={348}

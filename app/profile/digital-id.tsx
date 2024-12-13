@@ -11,8 +11,17 @@ export default function DigitalId() {
   const { picturesQuery } = useStudentPictures(accessToken);
 
   return (
-    <ScrollView>
-      <StudentId profile={profileQuery.data} pictures={picturesQuery.data} />
+    <ScrollView
+      refreshing={profileQuery.isFetching || picturesQuery.isFetching}
+      onRefresh={() => {
+        profileQuery.refetch();
+        picturesQuery.refetch();
+      }}
+    >
+      <StudentId
+        profile={profileQuery.data ?? null}
+        pictures={picturesQuery.data ?? null}
+      />
     </ScrollView>
   );
 }
