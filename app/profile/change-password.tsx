@@ -76,7 +76,7 @@ export default function ChangePassword() {
 
   const passwordStrength = useMemo(
     () => (!notCommonPassword ? -1 : criterias.filter((v) => v[1]).length),
-    criterias,
+    [criterias, notCommonPassword],
   );
 
   const passwordStrengthValue = useSharedValue(0);

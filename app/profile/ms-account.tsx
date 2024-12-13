@@ -25,8 +25,6 @@ export default function MsAccount() {
   const { msAccountQuery } = useStudentMsAccount(accessToken);
   const [showPassword, setShowPassword] = useState(false);
 
-  if (!msAccountQuery.data) return <Redirect href="/home" />;
-
   const [snackbarState, setSnackbarState] = useState({
     visible: false,
     message: "",
@@ -46,7 +44,9 @@ College: ${msAccountQuery.data?.CollegeCode}
 MS Account: ${msAccountQuery.data?.Username}
 `,
     });
-  }, []);
+  }, [msAccountQuery.data]);
+
+  if (!msAccountQuery.data) return <Redirect href="/home" />;
 
   return (
     <>
