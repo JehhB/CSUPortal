@@ -34,7 +34,8 @@
           "backgroundColor": "#450a0a",
           "imageWidth": 288
         }
-      ]
+      ],
+      "expo-camera"
     ],
     "experiments": {
       "typedRoutes": true

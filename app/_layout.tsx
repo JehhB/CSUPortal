@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
+import { Roboto_400Regular, Roboto_500Medium } from "@expo-google-fonts/roboto";
 import {
   RopaSans_400Regular,
   RopaSans_400Regular_Italic,
@@ -17,6 +18,8 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded] = useFonts({
+    Roboto_400Regular,
+    Roboto_500Medium,
     RopaSans_400Regular,
     RopaSans_400Regular_Italic,
     PlayfairDisplay_400Regular,

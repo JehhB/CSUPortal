@@ -3,7 +3,7 @@ import { StudentGwaNormalized } from "@/student/gwa/normalizeGwa";
 import { GridHandle } from "./Grid";
 import { ClipPath, Defs, G, Rect, Text } from "react-native-svg";
 import { RopaSansRegular } from "@/shared/constants/themes";
-import { ColorValue } from "react-native";
+import { ColorValue, Platform } from "react-native";
 import Bar from "./Bar";
 
 export type BarColors = Map<number | "summer" | "__default__", ColorValue>;
@@ -68,19 +68,21 @@ export default function GwaBar({
               barColors.get("__default__") ??
               "#000000"
             }
-            clipPath={`url(#${clipId})`}
+            clipPath={Platform.OS === "web" ? `url(#${clipId})` : undefined}
           />
         ))}
-        <Defs>
-          <ClipPath id={clipId}>
-            <Rect
-              x={x}
-              y={rowDimension.y}
-              width={rowDimension.w}
-              height={rowDimension.h}
-            />
-          </ClipPath>
-        </Defs>
+        {Platform.OS === "web" && (
+          <Defs>
+            <ClipPath id={clipId}>
+              <Rect
+                x={x}
+                y={rowDimension.y}
+                width={rowDimension.w}
+                height={rowDimension.h}
+              />
+            </ClipPath>
+          </Defs>
+        )}
         <Rect
           onPress={() => onPress(gwa)}
           opacity={0.0}

@@ -220,7 +220,11 @@ export default function ChangePassword() {
         <Snackbar
           visible={showSuccess}
           onDismiss={() => logout()}
-          action={{ label: "Logout", onPress: () => logout() }}
+          action={{
+            label: "Logout",
+            onPress: () => logout(),
+            labelStyle: styles.colorSecondary,
+          }}
         >
           Password change successfully
         </Snackbar>

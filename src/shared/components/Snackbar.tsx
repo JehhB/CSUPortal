@@ -6,12 +6,17 @@ import {
 } from "react-native-paper";
 import { VariantProp } from "react-native-paper/lib/typescript/components/Typography/types";
 import { theme } from "../constants/themes";
+import { useMemo } from "react";
+
+type NotUndefined<T> = T extends undefined ? never : T;
+type ActionType = NotUndefined<MaterialSnackbarProps["action"]>;
 
 export type SnackbarProps =
-  | (Omit<MaterialSnackbarProps, "children"> & {
+  | (Omit<MaterialSnackbarProps, "children" | "action"> & {
       content: string;
       contentStyle?: StyleProp<TextStyle>;
       contentVariant?: VariantProp<never> | undefined;
+      action?: ActionType | ((def: ActionType) => ActionType);
     })
   | MaterialSnackbarProps;
 
@@ -28,14 +33,25 @@ export default function Snackbar(props: SnackbarProps) {
       </Text>
     );
 
+  const defaultAction: ActionType = useMemo(
+    () => ({
+      label: "Dismiss",
+      labelStyle: styles.action,
+      onPress: props.onDismiss,
+    }),
+    [props.onDismiss],
+  );
+
+  const action = useMemo(() => {
+    if (props.action === undefined) return defaultAction;
+    if (typeof props.action !== "function") return props.action;
+    return props.action(defaultAction);
+  }, [props.action, defaultAction]);
+
   return (
     <MaterialSnackbar
-      action={{
-        label: "Dismiss",
-        labelStyle: styles.action,
-        onPress: props.onDismiss,
-      }}
       {...props}
+      action={action}
       style={[styles.snackbar, props.style]}
       children={children}
     />

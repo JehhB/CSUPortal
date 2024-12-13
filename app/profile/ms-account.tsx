@@ -8,7 +8,7 @@ import {
 } from "react-native-paper";
 import * as Clipboard from "expo-clipboard";
 import common from "@/shared/constants/common";
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import Surface from "@/shared/components/Surface";
 import TextInput from "@/shared/components/TextInput";
 import useStudentMsAccount from "@/student/profile/useStudentMSAccount";
@@ -112,7 +112,7 @@ MS Account: ${msAccountQuery.data?.Username}
             This is a one-time password. You'll be prompted to change it upon
             your first login, so it will no longer be valid afterward.{" "}
             <TouchableRipple onPress={() => setShowPassword((p) => !p)}>
-              <NativeText style={styles.colorPrimary}>
+              <NativeText style={styles.textButton}>
                 {showPassword ? "Hide password" : "Show password"}
               </NativeText>
             </TouchableRipple>
@@ -121,7 +121,7 @@ MS Account: ${msAccountQuery.data?.Username}
           <HelperText visible type="info">
             Having a trouble signing in your Microsoft account?
             <TouchableRipple onPress={sendEmail}>
-              <NativeText style={styles.colorPrimary}>
+              <NativeText style={styles.textButton}>
                 Contact us at support@csucarig.edu.ph
               </NativeText>
             </TouchableRipple>
@@ -158,5 +158,15 @@ const styles = StyleSheet.create({
   },
   fieldName: {
     width: 60,
+  },
+  textButton: {
+    fontSize: 12,
+    lineHeight: 12,
+    transform: [
+      {
+        translateY: Platform.select({ default: "20%", web: "0%" }),
+      },
+    ],
+    color: theme.colors.primary,
   },
 });

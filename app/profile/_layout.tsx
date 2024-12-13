@@ -11,8 +11,12 @@ export default function ProfileLayout() {
     <Stack
       screenOptions={{
         headerShown: true,
-        header: () => <Appbar title="Profile" canGoBack />,
+        header: (props) => (
+          <Appbar title={props.options.title ?? "Profile"} canGoBack />
+        ),
       }}
-    />
+    >
+      <Stack.Screen name="digital-id" options={{ title: "Digital ID" }} />
+    </Stack>
   );
 }

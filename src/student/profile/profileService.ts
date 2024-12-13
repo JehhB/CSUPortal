@@ -1,4 +1,6 @@
 const STUDENT_PROFILE_ENDPOINT = "https://takay.csucarig.edu.ph/guid/profile";
+const STUDENT_COLLEGE_ENDPOINT =
+  "https://takay.csucarig.edu.ph/checkusercollege";
 const STUDENT_PICTURE_ENDPOINT =
   "https://takay.csucarig.edu.ph/guid/getStudentPic";
 const STUDENT_MSACCOUNT_ENDPOINT = "https://takay.csucarig.edu.ph/getMicrosoft";
@@ -58,6 +60,8 @@ export type StudentProfile = {
   GrossIncome: string;
   WDisability: number;
   Disability: string | null;
+  College: string;
+  CollegeColor: string;
 };
 
 export type ProfilePictureResponse = {
@@ -84,6 +88,33 @@ export class StudentProfileError extends Error {
   }
 }
 
+export const COLLEGES = new Map([
+  [
+    "coea",
+    { label: "College of Engineering and Architecture", color: "#ba0d0d" },
+  ],
+  [
+    "cics",
+    {
+      label: "College of Information and Computing Sciences",
+      color: "#ba660d",
+    },
+  ],
+  ["cit", { label: "College of Industrial Technology", color: "#38ba0d" }],
+  [
+    "cnsm",
+    { label: "College of Natural Sciences and Mathematics", color: "#0d55ba" },
+  ],
+  [
+    "chass",
+    { label: "College of Humanities and Social Sciences", color: "#8f8f00" },
+  ],
+  ["cvm", { label: "College of Veterinary Medicine", color: "#5b0dba" }],
+  ["com", { label: "College of Medicine", color: "#0dba30" }],
+  ["cpad", { label: "College of Public Administration", color: "#ba0d41" }],
+  ["chk", { label: "College of Human Kinetics", color: "#1b0dba" }],
+]);
+
 const profileService = {
   async get(accessToken: string | null) {
     if (accessToken == null) {
@@ -104,9 +135,37 @@ const profileService = {
       );
     }
 
+    const collegeRes = await fetch(STUDENT_COLLEGE_ENDPOINT, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!collegeRes.ok) {
+      throw new StudentProfileError(
+        "Error encountered while fetching student college",
+      );
+    }
+
     try {
       const data: StudentProfile[] = await res.json();
-      return data[0] ?? null;
+      if (data.length < 1) return null;
+      const profile = data[0];
+
+      const college: string[] = await collegeRes.json();
+      if (college.length < 1) return profile;
+
+      const col = COLLEGES.get(college[0].toLowerCase());
+      if (col !== undefined) {
+        profile.College = col.label;
+        profile.CollegeColor = col.color;
+      } else {
+        profile.College = college[0].toUpperCase();
+        profile.CollegeColor = "#3c3c3c";
+      }
+      return profile;
     } catch (error) {
       console.warn(error);
       throw new StudentProfileError("Error encountered parsing response");

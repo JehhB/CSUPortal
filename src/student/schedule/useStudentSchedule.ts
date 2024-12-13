@@ -11,6 +11,7 @@ export default function useStudentSchedule(accessToken: string | null) {
     SubjectSchedule[] | null,
     StudentScheduleError
   >({
+    initialData: null,
     queryKey: [STUDENT_SCHEDULE_QUERY_KEY, accessToken],
     queryFn: () => scheduleService.get(accessToken),
     enabled: accessToken !== null,

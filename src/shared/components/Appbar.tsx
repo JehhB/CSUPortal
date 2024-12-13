@@ -9,7 +9,7 @@ import {
   TouchableRipple,
 } from "react-native-paper";
 import { Image } from "expo-image";
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { theme } from "@/shared/constants/themes";
@@ -34,9 +34,17 @@ export default function Appbar({
   const { msAccountQuery } = useStudentMsAccount(accessToken);
 
   const menuItems: (
-    | { title: string; icon: string; onPress: () => void }
-    | { divider: true }
+    | { title: string; icon: string; onPress: () => void; disabled?: boolean }
+    | { divider: true; disabled?: boolean }
   )[] = [
+    {
+      title: "Microsoft account",
+      icon: "email-outline",
+      onPress: () => {
+        router.navigate("/profile/ms-account");
+      },
+      disabled: msAccountQuery.data === null,
+    },
     {
       title: "Change password",
       icon: "account-edit-outline",
@@ -48,10 +56,10 @@ export default function Appbar({
       divider: true,
     },
     {
-      title: "Virtual ID",
+      title: "Digital ID",
       icon: "badge-account-outline",
       onPress: () => {
-        router.navigate("/profile/to-be-implemented");
+        router.navigate("/profile/digital-id");
       },
     },
     {
@@ -60,6 +68,7 @@ export default function Appbar({
       onPress: () => {
         router.navigate("/profile/to-be-implemented");
       },
+      disabled: Platform.OS !== "android" && Platform.OS !== "ios",
     },
     {
       divider: true,
@@ -71,23 +80,15 @@ export default function Appbar({
     },
   ];
 
-  if (msAccountQuery.data) {
-    menuItems.unshift({
-      title: "Microsoft account",
-      icon: "email-outline",
-      onPress: () => {
-        router.navigate("/profile/ms-account");
-      },
-    });
-  }
-
   return (
     <MaterialAppbar.Header style={styles.appBar}>
       {canGoBack === true ? (
         <MaterialAppbar.BackAction
           color={theme.colors.surface}
           style={styles.back}
-          onPress={() => router.navigate("/home")}
+          onPress={() =>
+            router.canGoBack() ? router.back() : router.navigate("/home")
+          }
         />
       ) : (
         <Image
@@ -126,29 +127,31 @@ export default function Appbar({
           )
         }
       >
-        {menuItems.map((item, index) =>
-          "divider" in item ? (
-            <Divider key={index} />
-          ) : (
-            <Menu.Item
-              key={index}
-              dense
-              onPress={() => {
-                setVisible(false);
-                item.onPress();
-              }}
-              title={item.title}
-              titleStyle={theme.fonts.titleMedium}
-              leadingIcon={({ size }) => (
-                <Icon
-                  source={item.icon}
-                  size={size}
-                  color={theme.colors.primary}
-                />
-              )}
-            />
-          ),
-        )}
+        {menuItems
+          .filter((i) => !("disabled" in i && i.disabled))
+          .map((item, index) =>
+            "divider" in item ? (
+              <Divider key={index} />
+            ) : (
+              <Menu.Item
+                key={index}
+                dense
+                onPress={() => {
+                  setVisible(false);
+                  item.onPress();
+                }}
+                title={item.title}
+                titleStyle={theme.fonts.titleMedium}
+                leadingIcon={({ size }) => (
+                  <Icon
+                    source={item.icon}
+                    size={size}
+                    color={theme.colors.primary}
+                  />
+                )}
+              />
+            ),
+          )}
       </Menu>
     </MaterialAppbar.Header>
   );
@@ -160,7 +163,6 @@ const styles = StyleSheet.create({
   },
   appBarContent: {
     color: theme.colors.surface,
-    textTransform: "capitalize",
   },
   logo: {
     width: 48,

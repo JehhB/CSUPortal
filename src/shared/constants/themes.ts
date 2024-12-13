@@ -23,6 +23,17 @@ export const PlayfairDisplayRegular = Platform.select({
   ios: "PlayfairDisplay-Regular",
 });
 
+export const RobotoRegular = Platform.select({
+  web: '"Roboto_400Regular", "roboto", sans-serif"',
+  android: "Roboto_400Regular",
+  ios: "Roboto-Regular",
+});
+export const RobotoMedium = Platform.select({
+  web: '"Roboto_500Medium", "roboto", sans-serif"',
+  android: "Roboto_500Medium",
+  ios: "Roboto-Medium",
+});
+
 export const fontConfig = configureFonts({
   config: {
     displayLarge: { fontFamily: PlayfairDisplayRegular },
