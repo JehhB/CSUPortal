@@ -1,7 +1,14 @@
 import { StyleSheet } from "react-native";
-import { theme } from "./themes";
+import { RopaSansRegularItalic, theme } from "./themes";
 
 const common = StyleSheet.create({
+  textAlignCenter: {
+    textAlign: "center",
+  },
+  hint: {
+    color: theme.colors.onSurfaceVariant,
+    fontFamily: RopaSansRegularItalic,
+  },
   dataTableHeader: {
     color: "#0c0a0999",
   },
@@ -38,6 +45,12 @@ const common = StyleSheet.create({
   },
   colorTertiary: {
     color: theme.colors.tertiary,
+  },
+  itemsCenter: {
+    alignItems: "center",
+  },
+  justifyCenter: {
+    justifyContent: "center",
   },
 });
 

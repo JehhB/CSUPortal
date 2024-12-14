@@ -46,7 +46,7 @@ export default function Snackbar(props: SnackbarProps) {
     if (props.action === undefined) return defaultAction;
     if (typeof props.action !== "function") return props.action;
     return props.action(defaultAction);
-  }, [props.action, defaultAction]);
+  }, [props, defaultAction]);
 
   return (
     <MaterialSnackbar

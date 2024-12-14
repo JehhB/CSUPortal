@@ -1,5 +1,14 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import {
+  getReactNativePersistence,
+  initializeAuth,
+  //@ts-ignore
+  browserLocalPersistence,
+} from "firebase/auth";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "react-native";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCnuCOXpXbizH2_ovKQcw22e5PhnQ7jxmo",
@@ -13,5 +22,11 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const analytics = getAnalytics(app);
+export const auth = initializeAuth(app, {
+  persistence:
+    Platform.OS === "web"
+      ? browserLocalPersistence
+      : getReactNativePersistence(AsyncStorage),
+});
 
 export default app;

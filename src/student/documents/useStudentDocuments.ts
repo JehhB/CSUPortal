@@ -14,7 +14,7 @@ export type UseStudentDocumentsOptions = Omit<
 >;
 
 export default function useStudentDocuments(
-  options: UseStudentDocumentsOptions,
+  options: UseStudentDocumentsOptions = {},
 ) {
   const documentMutation = useMutation<
     string | null,

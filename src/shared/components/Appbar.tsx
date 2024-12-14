@@ -9,22 +9,22 @@ import {
   TouchableRipple,
 } from "react-native-paper";
 import { Image } from "expo-image";
-import { Platform, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { theme } from "@/shared/constants/themes";
 import { useState } from "react";
 import useAuth from "@/auth/useAuth";
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 import useStudentPictures from "@/student/profile/useStudentPictures";
 import useStudentMsAccount from "@/student/profile/useStudentMSAccount";
 
 export default function Appbar({
   title,
-  canGoBack,
+  goBack,
 }: {
   title: string;
-  canGoBack?: boolean;
+  goBack?: Href;
 }) {
   const { accessToken, logout } = useAuth();
   const { picturesQuery } = useStudentPictures(accessToken);
@@ -41,7 +41,7 @@ export default function Appbar({
       title: "Microsoft account",
       icon: "email-outline",
       onPress: () => {
-        router.navigate("/profile/ms-account");
+        router.replace("/profile/ms-account");
       },
       disabled: msAccountQuery.data === null,
     },
@@ -49,7 +49,7 @@ export default function Appbar({
       title: "Change password",
       icon: "account-edit-outline",
       onPress: () => {
-        router.navigate("/profile/change-password");
+        router.replace("/profile/change-password");
       },
     },
     {
@@ -59,14 +59,14 @@ export default function Appbar({
       title: "Digital ID",
       icon: "badge-account-outline",
       onPress: () => {
-        router.navigate("/profile/digital-id");
+        router.replace("/profile/digital-id");
       },
     },
     {
       title: "ID Scanner",
       icon: "qrcode-scan",
       onPress: () => {
-        router.navigate("/profile/to-be-implemented");
+        router.replace("/scan");
       },
     },
     {
@@ -81,13 +81,13 @@ export default function Appbar({
 
   return (
     <MaterialAppbar.Header style={styles.appBar}>
-      {canGoBack === true ? (
+      {goBack ? (
         <MaterialAppbar.BackAction
           color={theme.colors.surface}
           style={styles.back}
-          onPress={() =>
-            router.canGoBack() ? router.back() : router.navigate("/home")
-          }
+          onPress={() => {
+            router.replace(goBack);
+          }}
         />
       ) : (
         <Image

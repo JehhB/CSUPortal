@@ -34,7 +34,9 @@ export default function useAuth() {
 
   const logoutMutation = useMutation({
     mutationKey: [LOGOUT_MUTATION_KEY, accessToken],
-    mutationFn: () => authService.logout(accessToken),
+    mutationFn: async () => {
+      await authService.logout(accessToken);
+    },
     onMutate: () => {
       queryClient.resetQueries({ queryKey: [AUTH_QUERY_KEY] });
     },

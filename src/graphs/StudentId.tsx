@@ -3,15 +3,14 @@ import {
   ProfilePictureResponse,
   StudentProfile,
 } from "@/student/profile/profileService";
-import { encodeAlphanumeric } from "@/util/encodeAlphanumeric";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { LayoutChangeEvent, StyleSheet, View } from "react-native";
-import * as Crypto from "expo-crypto";
 import { Image, Line, Rect, Svg, Text } from "react-native-svg";
 import QRCode from "react-native-qrcode-svg";
 import { G } from "react-native-svg";
 import { Button, Portal, TouchableRipple } from "react-native-paper";
 import Dialog from "@/shared/components/Dialog";
+import profileQr from "@/student/profile/profileQr";
 
 export type StudentIdProps = {
   profile: StudentProfile | null;
@@ -36,31 +35,9 @@ export default function StudentId({ profile, pictures }: StudentIdProps) {
   const [qrValue, setQrValue] = useState<string | null>(null);
 
   useEffect(() => {
-    const generateQRValue = async () => {
-      if (!profile) {
-        setQrValue(null);
-        return;
-      }
-
-      const data = encodeAlphanumeric(
-        [
-          profile.IDNumber,
-          profile.LastName,
-          profile.FirstName,
-          Date.now(),
-        ].join("$"),
-      );
-
-      const key = process.env.EXPO_PUBLIC_PROFILE_QR_KEY;
-      const hash = await Crypto.digestStringAsync(
-        Crypto.CryptoDigestAlgorithm.SHA256,
-        data + key,
-      );
-
-      setQrValue(`${data}$${hash}`.toUpperCase());
-    };
-
-    generateQRValue();
+    profileQr.generate(profile).then((value) => {
+      setQrValue(value);
+    });
   }, [profile]);
 
   const onContainerLayout = useCallback(
@@ -89,8 +66,7 @@ export default function StudentId({ profile, pictures }: StudentIdProps) {
           width={dim[0]}
           height={dim[1]}
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-          onPress={(e) => {
-            console.log(e);
+          onPress={() => {
             setShowQrEnlarge(true);
           }}
         >
@@ -270,6 +246,7 @@ export default function StudentId({ profile, pictures }: StudentIdProps) {
                   size={dialogWidth - 16}
                   value={qrValue}
                   color={theme.colors.primary}
+                  backgroundColor="transparent"
                 />
               </TouchableRipple>
             )}

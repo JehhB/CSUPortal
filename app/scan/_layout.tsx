@@ -2,7 +2,7 @@ import useAuth from "@/auth/useAuth";
 import Appbar from "@/shared/components/Appbar";
 import { Redirect, Stack } from "expo-router";
 
-export default function ProfileLayout() {
+export default function ScanLayout() {
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) return <Redirect href="/signin" />;
@@ -11,12 +11,13 @@ export default function ProfileLayout() {
     <Stack
       screenOptions={{
         headerShown: true,
-        header: (props) => (
-          <Appbar title={props.options.title ?? "Profile"} goBack="/home" />
+        header: ({ options, route }) => (
+          <Appbar
+            title={options.title ?? "Scan ID"}
+            goBack={route.name === "[event]" ? "/scan" : "/home"}
+          />
         ),
       }}
-    >
-      <Stack.Screen name="digital-id" options={{ title: "Digital ID" }} />
-    </Stack>
+    />
   );
 }

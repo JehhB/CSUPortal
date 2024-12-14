@@ -143,7 +143,7 @@ export default function ChangePassword() {
     <>
       <ScrollView>
         <Surface>
-          <Text variant="titleLarge" style={styles.titles}>
+          <Text variant="titleLarge" style={common.titles}>
             Change Password
           </Text>
           <PasswordInput
@@ -223,7 +223,7 @@ export default function ChangePassword() {
           action={{
             label: "Logout",
             onPress: () => logout(),
-            labelStyle: styles.colorSecondary,
+            labelStyle: common.colorSecondary,
           }}
         >
           Password change successfully
@@ -234,7 +234,6 @@ export default function ChangePassword() {
 }
 
 const styles = StyleSheet.create({
-  ...common,
   strengthIndicator: {
     marginTop: 14,
     height: 4,

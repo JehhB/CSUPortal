@@ -52,7 +52,7 @@ MS Account: ${msAccountQuery.data?.Username}
     <>
       <ScrollView>
         <Surface>
-          <Text variant="titleLarge" style={styles.titles}>
+          <Text variant="titleLarge" style={common.titles}>
             Microsoft Account
           </Text>
           <View style={[styles.field, styles.mb16]}>
@@ -60,7 +60,7 @@ MS Account: ${msAccountQuery.data?.Username}
               label="Email"
               right={
                 <TextInput.Icon
-                  style={styles.bgTransparent}
+                  style={common.bgTransparent}
                   size={20}
                   icon="content-copy"
                   color={theme.colors.primary}
@@ -84,7 +84,7 @@ MS Account: ${msAccountQuery.data?.Username}
               label="Password"
               right={
                 <TextInput.Icon
-                  style={styles.bgTransparent}
+                  style={common.bgTransparent}
                   size={20}
                   icon="content-copy"
                   color={theme.colors.primary}
@@ -142,7 +142,6 @@ MS Account: ${msAccountQuery.data?.Username}
 }
 
 const styles = StyleSheet.create({
-  ...common,
   snackbar: {
     backgroundColor: theme.colors.primary,
   },

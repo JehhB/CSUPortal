@@ -152,32 +152,32 @@ export default function Grades() {
     <>
       <ScrollView refreshing={isFetching} onRefresh={refetch}>
         <Surface>
-          <Text variant="titleLarge" style={styles.titles}>
+          <Text variant="titleLarge" style={common.titles}>
             Advised Subjects
           </Text>
           <DataTable>
-            <DataTable.Header style={styles.dataTableThickBorder}>
-              <DataTable.Title style={styles.dataTableShort}>
-                <Text variant="labelMedium" style={styles.dataTableHeader}>
+            <DataTable.Header style={common.dataTableThickBorder}>
+              <DataTable.Title style={common.dataTableShort}>
+                <Text variant="labelMedium" style={common.dataTableHeader}>
                   Code
                 </Text>
               </DataTable.Title>
               <DataTable.Title>
-                <Text variant="labelMedium" style={styles.dataTableHeader}>
+                <Text variant="labelMedium" style={common.dataTableHeader}>
                   Subject Description
                 </Text>
               </DataTable.Title>
               <DataTable.Title
-                style={[styles.dataTableShort, styles.dataTableRight]}
+                style={[common.dataTableShort, common.dataTableRight]}
               >
-                <Text variant="labelMedium" style={styles.dataTableHeader}>
+                <Text variant="labelMedium" style={common.dataTableHeader}>
                   Units
                 </Text>
               </DataTable.Title>
               <DataTable.Title
-                style={[styles.dataTableShort, styles.dataTableRight]}
+                style={[common.dataTableShort, common.dataTableRight]}
               >
-                <Text variant="labelMedium" style={styles.dataTableHeader}>
+                <Text variant="labelMedium" style={common.dataTableHeader}>
                   Grade
                 </Text>
               </DataTable.Title>
@@ -190,10 +190,10 @@ export default function Grades() {
                   showSubjectDialog(true);
                 }}
                 style={[
-                  index === arr.length - 1 && styles.dataTableThickBorder,
+                  index === arr.length - 1 && common.dataTableThickBorder,
                 ]}
               >
-                <DataTable.Cell style={styles.dataTableShort}>
+                <DataTable.Cell style={common.dataTableShort}>
                   <Text variant="labelMedium">{subject.SubjectCode}</Text>
                 </DataTable.Cell>
                 <DataTable.Cell>
@@ -202,12 +202,12 @@ export default function Grades() {
                   </Text>
                 </DataTable.Cell>
                 <DataTable.Cell
-                  style={[styles.dataTableShort, styles.dataTableRight]}
+                  style={[common.dataTableShort, common.dataTableRight]}
                 >
                   <Text variant="labelMedium">{subject.Units}</Text>
                 </DataTable.Cell>
                 <DataTable.Cell
-                  style={[styles.dataTableShort, styles.dataTableRight]}
+                  style={[common.dataTableShort, common.dataTableRight]}
                 >
                   <Text variant="labelMedium">
                     {subject.Grade ?? "NO GRADE"}
@@ -216,31 +216,31 @@ export default function Grades() {
               </DataTable.Row>
             ))}
             <DataTable.Row
-              style={styles.dataTableThickBorder}
+              style={common.dataTableThickBorder}
               pointerEvents="none"
             >
-              <DataTable.Cell style={styles.dataTableRight}>
+              <DataTable.Cell style={common.dataTableRight}>
                 <Text
                   variant="labelMedium"
-                  style={[styles.dataTableHeader, styles.pointerEventNone]}
+                  style={[common.dataTableHeader, common.pointerEventNone]}
                 >
                   Weighted Average
                 </Text>
               </DataTable.Cell>
               <DataTable.Cell
                 style={[
-                  styles.dataTableShort,
-                  styles.dataTableRight,
-                  styles.pointerEventNone,
+                  common.dataTableShort,
+                  common.dataTableRight,
+                  common.pointerEventNone,
                 ]}
               >
                 <Text variant="labelMedium">{units}</Text>
               </DataTable.Cell>
               <DataTable.Cell
                 style={[
-                  styles.dataTableShort,
-                  styles.dataTableRight,
-                  styles.pointerEventNone,
+                  common.dataTableShort,
+                  common.dataTableRight,
+                  common.pointerEventNone,
                 ]}
               >
                 <Text variant="labelMedium">{average.toFixed(2)}</Text>
@@ -251,9 +251,9 @@ export default function Grades() {
               page={periodIndex}
               numberOfPages={numberOfPeriods}
               onPageChange={(page) => setPeriodIndex(page)}
-              style={styles.dataTablePagination}
+              style={common.dataTablePagination}
               label={
-                <Text variant="labelMedium" style={styles.dataTableHeader}>
+                <Text variant="labelMedium" style={common.dataTableHeader}>
                   {periodLabel(currentPeriod)}
                 </Text>
               }
@@ -335,7 +335,6 @@ export default function Grades() {
 }
 
 const styles = StyleSheet.create({
-  ...common,
   downloadButton: {
     alignSelf: "flex-start",
   },

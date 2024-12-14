@@ -115,7 +115,7 @@ export default function Home() {
     <>
       <ScrollView refreshing={isFetching} onRefresh={refetch}>
         <Surface>
-          <Text variant="titleLarge" style={styles.titles}>
+          <Text variant="titleLarge" style={common.titles}>
             Current Progress
           </Text>
           <View style={styles.completion}>
@@ -142,13 +142,13 @@ export default function Home() {
           </View>
         </Surface>
         <Surface>
-          <Text variant="titleLarge" style={styles.titles}>
+          <Text variant="titleLarge" style={common.titles}>
             General Weighted Average per Semester
           </Text>
           <GwaBarGraph gwa={normalizedGwa} maxWidth={350} />
         </Surface>
         <Surface>
-          <Text variant="titleLarge" style={styles.titles}>
+          <Text variant="titleLarge" style={common.titles}>
             Computed General Weighted Average
           </Text>
           {checklistQuery.data ? (
@@ -165,32 +165,32 @@ export default function Home() {
           )}
         </Surface>
         <Surface>
-          <Text variant="titleLarge" style={styles.titles}>
+          <Text variant="titleLarge" style={common.titles}>
             Advised Subjects
           </Text>
           <DataTable>
-            <DataTable.Header style={styles.dataTableThickBorder}>
-              <DataTable.Title style={styles.dataTableShort}>
-                <Text variant="labelMedium" style={styles.dataTableHeader}>
+            <DataTable.Header style={common.dataTableThickBorder}>
+              <DataTable.Title style={common.dataTableShort}>
+                <Text variant="labelMedium" style={common.dataTableHeader}>
                   Code
                 </Text>
               </DataTable.Title>
               <DataTable.Title>
-                <Text variant="labelMedium" style={styles.dataTableHeader}>
+                <Text variant="labelMedium" style={common.dataTableHeader}>
                   Subject Description
                 </Text>
               </DataTable.Title>
               <DataTable.Title
-                style={[styles.dataTableShort, styles.dataTableRight]}
+                style={[common.dataTableShort, common.dataTableRight]}
               >
-                <Text variant="labelMedium" style={styles.dataTableHeader}>
+                <Text variant="labelMedium" style={common.dataTableHeader}>
                   Units
                 </Text>
               </DataTable.Title>
               <DataTable.Title
-                style={[styles.dataTableShort, styles.dataTableRight]}
+                style={[common.dataTableShort, common.dataTableRight]}
               >
-                <Text variant="labelMedium" style={styles.dataTableHeader}>
+                <Text variant="labelMedium" style={common.dataTableHeader}>
                   Remarks
                 </Text>
               </DataTable.Title>
@@ -199,14 +199,14 @@ export default function Home() {
               <DataTable.Row
                 key={subject.SubjectCode}
                 style={[
-                  index === array.length - 1 && styles.dataTableThickBorder,
+                  index === array.length - 1 && common.dataTableThickBorder,
                 ]}
                 onPress={() => {
                   setCurrentSubject(subject);
                   showSubjectDialog(true);
                 }}
               >
-                <DataTable.Cell style={styles.dataTableShort}>
+                <DataTable.Cell style={common.dataTableShort}>
                   <Text variant="labelMedium">{subject.SubjectCode}</Text>
                 </DataTable.Cell>
                 <DataTable.Cell>
@@ -215,12 +215,12 @@ export default function Home() {
                   </Text>
                 </DataTable.Cell>
                 <DataTable.Cell
-                  style={[styles.dataTableShort, styles.dataTableRight]}
+                  style={[common.dataTableShort, common.dataTableRight]}
                 >
                   <Text variant="labelMedium">{subject.Units}</Text>
                 </DataTable.Cell>
                 <DataTable.Cell
-                  style={[styles.dataTableShort, styles.dataTableRight]}
+                  style={[common.dataTableShort, common.dataTableRight]}
                 >
                   <Text variant="labelMedium">{subject.Description}</Text>
                 </DataTable.Cell>
@@ -230,9 +230,9 @@ export default function Home() {
               page={currentSem}
               numberOfPages={numberOfSems}
               onPageChange={(page) => setCurrentSem(page)}
-              style={styles.dataTablePagination}
+              style={common.dataTablePagination}
               label={
-                <Text variant="labelMedium" style={styles.dataTableHeader}>
+                <Text variant="labelMedium" style={common.dataTableHeader}>
                   {semLabel(sems.at(currentSem))}
                 </Text>
               }
@@ -260,7 +260,6 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  ...common,
   completion: {
     flexDirection: "row",
     alignItems: "center",
