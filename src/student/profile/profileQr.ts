@@ -1,7 +1,6 @@
 import { StudentProfile } from "@/student/profile/profileService";
 import { encodeAlphanumeric } from "@/util/encodeAlphanumeric";
-import * as Crypto from "expo-crypto";
-import { parseInt } from "lodash";
+import { digestStringAsync, CryptoDigestAlgorithm } from "expo-crypto";
 
 const profileQr = {
   async generate(profile: StudentProfile | null) {
@@ -16,8 +15,8 @@ const profileQr = {
     );
 
     const key = process.env.EXPO_PUBLIC_PROFILE_QR_KEY;
-    const hash = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.SHA256,
+    const hash = await digestStringAsync(
+      CryptoDigestAlgorithm.SHA256,
       data + key,
     );
 
@@ -38,8 +37,8 @@ const profileQr = {
 
       const key = process.env.EXPO_PUBLIC_PROFILE_QR_KEY;
 
-      const verificationHash = await Crypto.digestStringAsync(
-        Crypto.CryptoDigestAlgorithm.SHA256,
+      const verificationHash = await digestStringAsync(
+        CryptoDigestAlgorithm.SHA256,
         encodedData + key,
       );
 
@@ -51,7 +50,7 @@ const profileQr = {
         idNumber: parts[0],
         lastName: parts[1],
         firstName: parts[2],
-        idCreatedAt: parseInt(parts[3]),
+        idCreatedAt: Number.parseInt(parts[3]),
       };
     } catch {
       return null;

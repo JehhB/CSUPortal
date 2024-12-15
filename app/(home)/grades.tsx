@@ -182,6 +182,15 @@ export default function Grades() {
                 </Text>
               </DataTable.Title>
             </DataTable.Header>
+            {currentSubjects.length === 0 && (
+              <DataTable.Row>
+                <DataTable.Cell style={common.justifyCenter}>
+                  <Text variant="labelMedium" style={common.hint}>
+                    No subjects to show
+                  </Text>
+                </DataTable.Cell>
+              </DataTable.Row>
+            )}
             {currentSubjects.map((subject, index, arr) => (
               <DataTable.Row
                 key={subject.SubjectCode}

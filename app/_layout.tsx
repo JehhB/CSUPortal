@@ -1,7 +1,7 @@
 import { PaperProvider } from "react-native-paper";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
+import { hideAsync, preventAutoHideAsync } from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
@@ -14,7 +14,7 @@ import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display"
 import { theme } from "@/shared/constants/themes";
 import QueryClientProvider from "@/queryClient/QueryClientProvider";
 
-SplashScreen.preventAutoHideAsync();
+preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -27,7 +27,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      hideAsync();
     }
   }, [loaded]);
 

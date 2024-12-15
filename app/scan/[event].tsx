@@ -13,10 +13,11 @@ import CameraDialog from "@/shared/components/CameraDialog";
 import { StyleSheet } from "react-native";
 import { theme } from "@/shared/constants/themes";
 import profileQr from "@/student/profile/profileQr";
-import { throttle } from "lodash";
+import orderBy from "lodash/orderBy";
+import throttle from "lodash/throttle";
 import useAuth from "@/auth/useAuth";
 import useStudentProfile from "@/student/profile/useStudentProfile";
-import * as Crypto from "expo-crypto";
+import { randomUUID } from "expo-crypto";
 
 const ATTENDANCES_PER_PAGE = 10;
 
@@ -74,39 +75,41 @@ export default function Event() {
   const [scanError, setScanError] = useState(false);
   const [scanSuccess, setScanSuccess] = useState(false);
 
-  const setAttendancesRef = useRef(setAttendances);
-
-  useEffect(() => {
-    setAttendancesRef.current = setAttendances;
-  }, [setAttendances]);
-
   const onSuccess = useCallback(
-    throttle(
-      (profile: {
-        idNumber: string;
-        lastName: string;
-        firstName: string;
-        idCreatedAt: number;
-      }) => {
-        setScanSuccess(true);
-        setScanError(false);
-        setAttendancesRef.current((prev) => {
-          if (!profileQuery.data || !event) return prev;
-          return [
-            {
-              id: Crypto.randomUUID(),
-              ...profile,
-              eventId: event.id,
-              scannedAt: Date.now(),
-              scannedBy: `${profileQuery.data.FirstName} ${profileQuery.data.LastName}`,
-            },
-            ...prev,
-          ];
-        });
-      },
-      1000,
-    ),
-    [event, profileQuery.data, setScanError, setScanSuccess],
+    (profile: {
+      idNumber: string;
+      lastName: string;
+      firstName: string;
+      idCreatedAt: number;
+    }) => {
+      for (const attendance of attendances) {
+        if (Date.now() - attendance.scannedAt > 5000) break;
+        if (
+          attendance.idNumber === profile.idNumber &&
+          attendance.idCreatedAt === profile.idCreatedAt
+        ) {
+          return;
+        }
+      }
+
+      setScanSuccess(true);
+      setScanError(false);
+      setAttendances((prev) => {
+        if (!profileQuery.data || !event) return prev;
+        const temp = [
+          {
+            id: randomUUID(),
+            ...profile,
+            eventId: event.id,
+            scannedAt: Date.now(),
+            scannedBy: `${profileQuery.data.FirstName} ${profileQuery.data.LastName}`,
+          },
+          ...prev,
+        ];
+        return orderBy(temp, ["scannedAt"], ["desc"]);
+      });
+    },
+    [event, profileQuery.data, setAttendances, attendances],
   );
 
   const onError = useCallback(

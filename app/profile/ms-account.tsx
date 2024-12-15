@@ -6,7 +6,7 @@ import {
   Text,
   TouchableRipple,
 } from "react-native-paper";
-import * as Clipboard from "expo-clipboard";
+import { setStringAsync } from "expo-clipboard";
 import common from "@/shared/constants/common";
 import { Platform, StyleSheet } from "react-native";
 import Surface from "@/shared/components/Surface";
@@ -18,7 +18,7 @@ import Snackbar from "@/shared/components/Snackbar";
 import { useCallback, useState } from "react";
 import { Text as NativeText, View } from "react-native";
 import { theme } from "@/shared/constants/themes";
-import * as MailComposer from "expo-mail-composer";
+import { composeAsync } from "expo-mail-composer";
 
 export default function MsAccount() {
   const { accessToken } = useAuth();
@@ -35,7 +35,7 @@ export default function MsAccount() {
   }, [setSnackbarState]);
 
   const sendEmail = useCallback(() => {
-    MailComposer.composeAsync({
+    composeAsync({
       recipients: ["support@csucarig.edu.ph"],
       subject: "MS ACCOUNT",
       body: `ID Number: ${msAccountQuery.data?.IDNumber}
@@ -66,7 +66,7 @@ MS Account: ${msAccountQuery.data?.Username}
                   color={theme.colors.primary}
                   onPress={() => {
                     if (msAccountQuery.data?.Username === undefined) return;
-                    Clipboard.setStringAsync(msAccountQuery.data.Username);
+                    setStringAsync(msAccountQuery.data.Username);
                     setSnackbarState({
                       visible: true,
                       message: "Microsoft account email copied to clipboard",
@@ -90,7 +90,7 @@ MS Account: ${msAccountQuery.data?.Username}
                   color={theme.colors.primary}
                   onPress={() => {
                     if (msAccountQuery.data?.Password === undefined) return;
-                    Clipboard.setStringAsync(msAccountQuery.data.Password);
+                    setStringAsync(msAccountQuery.data.Password);
                     setSnackbarState({
                       visible: true,
                       message: "Microsoft account password copied to clipboard",

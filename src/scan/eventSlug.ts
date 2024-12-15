@@ -1,13 +1,10 @@
-import * as Crypto from "expo-crypto";
+import { digestStringAsync, CryptoDigestAlgorithm } from "expo-crypto";
 import { Event } from "@/scan/useScanEvents";
 import slugify from "slugify";
 
 const eventSlug = {
   async shortHash(id: string) {
-    const hash = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.SHA256,
-      id,
-    );
+    const hash = await digestStringAsync(CryptoDigestAlgorithm.SHA256, id);
     return hash.slice(0, 8);
   },
 

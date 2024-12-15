@@ -16,7 +16,7 @@ import common from "@/shared/constants/common";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { theme } from "@/shared/constants/themes";
 import TextInput from "@/shared/components/TextInput";
-import * as Crypto from "expo-crypto";
+import { randomUUID } from "expo-crypto";
 import ConfirmDialog from "@/shared/components/ConfirmDialog";
 import eventSlug from "@/scan/eventSlug";
 import { router } from "expo-router";
@@ -25,7 +25,9 @@ import useStudentProfile from "@/student/profile/useStudentProfile";
 import useAuth from "@/auth/useAuth";
 import CameraDialog from "@/shared/components/CameraDialog";
 import { Event } from "@/scan/useScanEvents";
-import { sortedUniqBy, throttle, orderBy } from "lodash";
+import sortedUniqBy from "lodash/sortedUniqBy";
+import throttle from "lodash/throttle";
+import orderBy from "lodash/orderBy";
 
 const EVENT_PER_PAGE = 5;
 
@@ -107,7 +109,7 @@ export default function ScanIndex() {
       onPress: (data) => {
         eventSlug
           .slugify({
-            id: Crypto.randomUUID(),
+            id: randomUUID(),
             name: data,
             creator: null,
             dateCreated: Date.now(),

@@ -19,4 +19,5 @@ web-build/
 
 expo-env.d.ts
 .env*.local
+.firebase
 # @end expo-cli

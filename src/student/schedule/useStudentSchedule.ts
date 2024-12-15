@@ -7,11 +7,7 @@ import scheduleService, {
 export const STUDENT_SCHEDULE_QUERY_KEY = "studentSchedule";
 
 export default function useStudentSchedule(accessToken: string | null) {
-  const scheduleQuery = useQuery<
-    SubjectSchedule[] | null,
-    StudentScheduleError
-  >({
-    initialData: null,
+  const scheduleQuery = useQuery<SubjectSchedule[], StudentScheduleError>({
     queryKey: [STUDENT_SCHEDULE_QUERY_KEY, accessToken],
     queryFn: () => scheduleService.get(accessToken),
     enabled: accessToken !== null,

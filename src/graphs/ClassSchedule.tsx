@@ -29,8 +29,7 @@ import { Schedule } from "@/student/schedule/parseSchedString";
 import { Button, Portal, Text as MaterialText } from "react-native-paper";
 import Dialog from "@/shared/components/Dialog";
 import { t12h } from "@/student/schedule/t12h";
-import { captureRef } from "react-native-view-shot";
-import * as Sharing from "expo-sharing";
+import onDownload from "./helper/onDownload";
 
 export type ClassScheduleProps = {
   classSchedule?: SubjectSchedule[] | null | undefined;
@@ -81,61 +80,6 @@ const Y_LABEL_FONTSIZE = 12;
 const SVG_WIDTH = 400;
 const SVG_HEIGHT = 640;
 
-async function onDownloadNative(svgRef: RefObject<Svg | null>) {
-  const image = await captureRef(svgRef, {
-    quality: 1.0,
-    width: SVG_WIDTH * 2,
-    height: SVG_HEIGHT * 2,
-    format: "png",
-    result: "tmpfile",
-  });
-
-  await Sharing.shareAsync(image, {
-    mimeType: "image/png",
-    dialogTitle: "Share schedule",
-    UTI: "schedule.png",
-  });
-}
-
-async function onDownloadWeb(svgRef: RefObject<Svg | null>) {
-  const svgElement = svgRef.current;
-  if (!svgElement) return;
-
-  const element = svgElement.elementRef as RefObject<SVGElement | undefined>;
-  const svg = element.current;
-  if (!svg) return;
-
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-  if (ctx === null) return;
-
-  const data = new XMLSerializer().serializeToString(svg);
-  const svgBlob = new Blob([data], { type: "image/svg+xml;charset=utf-8" });
-  const url = URL.createObjectURL(svgBlob);
-
-  const img = new Image();
-  img.onload = () => {
-    // Set canvas dimensions
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    // Draw SVG on canvas
-    ctx.drawImage(img, 0, 0);
-
-    // Convert to PNG and download
-    const pngUrl = canvas.toDataURL("image/png");
-    const downloadLink = document.createElement("a");
-    downloadLink.download = "image.png";
-    downloadLink.href = pngUrl;
-    downloadLink.click();
-
-    // Cleanup
-    URL.revokeObjectURL(url);
-  };
-
-  img.src = url;
-}
-
 export default function ClassSchedule(props: ClassScheduleProps) {
   const svgRef = useRef<Svg | null>(null);
   const [dialogShown, showDialog] = useState(false);
@@ -185,14 +129,10 @@ export default function ClassSchedule(props: ClassScheduleProps) {
     [classSchedule],
   );
 
-  const onDownload = useCallback(
+  const download = useCallback(
     async () => {
       try {
-        if (Platform.OS !== "web") {
-          onDownloadNative(svgRef);
-        } else {
-          onDownloadWeb(svgRef);
-        }
+        onDownload(svgRef);
       } catch (error) {
         console.warn(error);
         if (props.showError)
@@ -287,7 +227,7 @@ export default function ClassSchedule(props: ClassScheduleProps) {
             )}
           </Grid>
         </Svg>
-        <Button style={styles.downloadButton} onPress={() => onDownload()}>
+        <Button style={styles.downloadButton} onPress={download}>
           <MaterialText variant="labelMedium" style={styles.downloadButtonText}>
             Download schedule
           </MaterialText>

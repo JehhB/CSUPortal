@@ -8,14 +8,13 @@ const STUDENT_GWA_QUERY_KEY = "studentGwa";
 
 export default function useStudentGwa(accessToken: string | null) {
   const gwaQuery = useQuery<StudentGwa, StudentGwaError>({
-    initialData: {},
     queryKey: [STUDENT_GWA_QUERY_KEY, accessToken],
     queryFn: () => gwaService.get(accessToken),
     enabled: accessToken !== null,
   });
 
   const normalizedGwa = useMemo(() => {
-    const gwa = perSemGwa(gwaQuery.data);
+    const gwa = perSemGwa(gwaQuery.data ?? {});
     return normalizeGwa(gwa);
   }, [gwaQuery.data]);
 
