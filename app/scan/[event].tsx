@@ -3,7 +3,7 @@ import useScanEvents from "@/scan/useScanEvents";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Redirect, useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ScrollView from "@/shared/components/ScrollView";
 import Surface from "@/shared/components/Surface";
 import common from "@/shared/constants/common";
@@ -112,6 +112,7 @@ export default function Event() {
     [event, profileQuery.data, setAttendances, attendances],
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onError = useCallback(
     throttle(() => {
       setScanSuccess(false);

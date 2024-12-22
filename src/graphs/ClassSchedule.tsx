@@ -1,16 +1,9 @@
-import React, {
-  RefObject,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { SubjectSchedule } from "@/student/schedule/scheduleService";
 import { Svg, Text } from "react-native-svg";
 import { Dimension, getDimension } from "./helper/getDimension";
 import {
   LayoutChangeEvent,
-  Platform,
   StyleProp,
   StyleSheet,
   View,

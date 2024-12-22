@@ -125,6 +125,8 @@ export default function ScanIndex() {
   const [showCamera, setShowCamera] = useState(false);
   const [scanError, setScanError] = useState(false);
   const [isFabOpen, setIsFabOpen] = useState(false);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const triggerError = useCallback(
     throttle(() => setScanError(true), 2500),
     [setScanError],

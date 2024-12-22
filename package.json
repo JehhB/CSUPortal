@@ -8,7 +8,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "expo lint",
+    "lint": "expo lint; tsc --noEmit",
     "build:web": "expo export -p web && pnpm dlx workbox-cli generateSW workbox-config.js"
   },
   "jest": {

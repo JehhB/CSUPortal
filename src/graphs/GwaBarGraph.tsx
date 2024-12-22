@@ -128,7 +128,7 @@ export default function GwaBarGraph(props: GwaBarGraphProps) {
             rows={gwa.length}
             rowWeight={gwa.map((v) => v.sems.length)}
             cols={numberOfTicks}
-            inset={[0, 0, -5, 0]}
+            insets={[0, 0, -5, 0]}
           >
             {(grid) => (
               <>

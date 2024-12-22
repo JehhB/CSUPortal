@@ -155,7 +155,7 @@ export default function Signin() {
               </Text>
 
               <TextInput
-                ref={(ref) => (inputRefs.current[0] = ref)}
+                ref={(ref: NativeTextInput) => (inputRefs.current[0] = ref)}
                 label="Student ID"
                 value={credentials.id}
                 onChangeText={(text) => {
