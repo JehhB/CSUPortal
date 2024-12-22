@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { ColorValue } from "react-native";
-import { Easing, useSharedValue, withTiming } from "react-native-reanimated";
+import {
+  Easing,
+  useAnimatedProps,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import Animated from "react-native-reanimated";
 import { Rect } from "react-native-svg";
 
@@ -27,5 +32,9 @@ export default function Bar(props: BarProps) {
     });
   }, [width, targetWidth]);
 
-  return <AnimatedRect {...rectProps} width={width} />;
+  const animatedProps = useAnimatedProps(() => ({
+    width: width.value,
+  }));
+
+  return <AnimatedRect {...rectProps} animatedProps={animatedProps} />;
 }
