@@ -1,12 +1,7 @@
-import useAuth from "@/auth/useAuth";
 import Appbar from "@/shared/components/Appbar";
-import { Redirect, Stack } from "expo-router";
+import { Stack } from "expo-router";
 
 export default function ScanLayout() {
-  const { isAuthenticated } = useAuth();
-
-  if (!isAuthenticated) return <Redirect href="/signin" />;
-
   return (
     <Stack
       screenOptions={{

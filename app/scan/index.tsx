@@ -100,6 +100,14 @@ export default function ScanIndex() {
     value: "",
   });
 
+  const creator = useMemo(
+    () =>
+      profileQuery.data
+        ? `${profileQuery.data.FirstName} ${profileQuery.data.LastName}`
+        : `Anonymous`,
+    [profileQuery.data],
+  );
+
   const createEvent = useCallback(() => {
     setEventName("");
     setInputState({
@@ -329,9 +337,9 @@ export default function ScanIndex() {
             leadingIcon="qrcode"
             onPress={() => {
               const event = events.find((e) => e.id === menuState.eventId);
-              if (!event || !profileQuery.data) return;
+              if (!event) return;
               const qr = {
-                creator: `${profileQuery.data.FirstName} ${profileQuery.data.LastName}`,
+                creator,
                 name: event.name,
                 id: event.id,
                 dateCreated: event.dateCreated,

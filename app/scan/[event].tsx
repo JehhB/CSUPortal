@@ -75,6 +75,13 @@ export default function Event() {
   const [scanError, setScanError] = useState(false);
   const [scanSuccess, setScanSuccess] = useState(false);
 
+  const scannedBy = useMemo(
+    () =>
+      profileQuery.data
+        ? `${profileQuery.data.FirstName} ${profileQuery.data.LastName}`
+        : "Anonymous",
+    [profileQuery.data],
+  );
   const onSuccess = useCallback(
     (profile: {
       idNumber: string;
@@ -95,21 +102,22 @@ export default function Event() {
       setScanSuccess(true);
       setScanError(false);
       setAttendances((prev) => {
-        if (!profileQuery.data || !event) return prev;
+        if (!event) return prev;
+
         const temp = [
           {
             id: randomUUID(),
             ...profile,
             eventId: event.id,
             scannedAt: Date.now(),
-            scannedBy: `${profileQuery.data.FirstName} ${profileQuery.data.LastName}`,
+            scannedBy,
           },
           ...prev,
         ];
         return orderBy(temp, ["scannedAt"], ["desc"]);
       });
     },
-    [event, profileQuery.data, setAttendances, attendances],
+    [event, scannedBy, setAttendances, attendances],
   );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,7 +132,10 @@ export default function Event() {
   if (event === null) return <Redirect href="/scan" />;
   return (
     <>
-      <ScrollView refreshing={profileQuery.isFetching}>
+      <ScrollView
+        refreshing={profileQuery.isFetching}
+        onRefresh={() => profileQuery.refetch()}
+      >
         <Surface>
           <Text variant="titleLarge" style={common.titles}>
             Attendances

@@ -75,7 +75,10 @@ export default function Appbar({
     {
       title: "Logout",
       icon: "logout",
-      onPress: logout,
+      onPress: () => {
+        router.replace("/signin");
+        logout();
+      },
     },
   ];
 
