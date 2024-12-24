@@ -128,7 +128,7 @@ export default function StudentId({ profile, pictures }: StudentIdProps) {
                 value={qrValue}
                 size={QR_SIZE}
                 color={theme.colors.primary}
-                logo={require("@@/assets/images/icon.png")}
+                logo={require("@@/assets/images/csu-logo.png")}
                 logoSize={QR_SIZE * 0.275}
                 logoMargin={4}
               />
