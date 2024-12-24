@@ -1,30 +1,20 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import authService, { AuthenticationError } from "./authService";
+import { useContext } from "react";
+import { AuthContext } from "./AuthProvider";
 
-export const AUTH_QUERY_KEY = "auth";
 export const LOGIN_MUTATION_KEY = "login";
 export const LOGOUT_MUTATION_KEY = "logout";
 export const CHANGE_PASSWORD_MUTATION_KEY = "changePassword";
 
 export default function useAuth() {
-  const queryClient = useQueryClient();
-
-  const authQuery = useQuery<string>({
-    queryKey: [AUTH_QUERY_KEY],
-    staleTime: Infinity,
-    gcTime: Infinity,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
-
-  const accessToken = authQuery.data;
+  const { accessToken, setAccessToken } = useContext(AuthContext);
 
   const loginMutation = useMutation({
     mutationKey: [LOGIN_MUTATION_KEY],
     mutationFn: authService.login,
     onSuccess: (data) => {
-      queryClient.setQueryData([AUTH_QUERY_KEY], data.access_token);
+      setAccessToken(data.access_token);
     },
     retry: (attempts, error) => {
       if (error instanceof AuthenticationError) return false;
@@ -38,7 +28,7 @@ export default function useAuth() {
       await authService.logout(accessToken);
     },
     onMutate: () => {
-      queryClient.resetQueries({ queryKey: [AUTH_QUERY_KEY] });
+      setAccessToken(null);
     },
   });
 
@@ -53,8 +43,8 @@ export default function useAuth() {
   });
 
   return {
-    accessToken: accessToken ?? null,
-    isAuthenticated: accessToken !== undefined,
+    accessToken: accessToken,
+    isAuthenticated: accessToken !== null,
     loginMutation,
     logoutMutation,
     changePasswordMutation,

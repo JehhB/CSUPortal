@@ -13,6 +13,7 @@ import {
 import { PlayfairDisplay_400Regular } from "@expo-google-fonts/playfair-display";
 import { theme } from "@/shared/constants/themes";
 import QueryClientProvider from "@/queryClient/QueryClientProvider";
+import AuthProvider from "@/auth/AuthProvider";
 
 preventAutoHideAsync();
 
@@ -36,10 +37,12 @@ export default function RootLayout() {
   }
 
   return (
-    <PaperProvider theme={theme}>
-      <QueryClientProvider>
-        <Stack screenOptions={{ headerShown: false }} />
-      </QueryClientProvider>
-    </PaperProvider>
+    <AuthProvider>
+      <PaperProvider theme={theme}>
+        <QueryClientProvider>
+          <Stack screenOptions={{ headerShown: false }} />
+        </QueryClientProvider>
+      </PaperProvider>
+    </AuthProvider>
   );
 }

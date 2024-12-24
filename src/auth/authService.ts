@@ -47,8 +47,8 @@ const authService = {
     return data;
   },
 
-  async logout(accessToken: string | undefined) {
-    if (accessToken === undefined) return;
+  async logout(accessToken: string | null) {
+    if (accessToken === null) return;
 
     await fetch(LOGOUT_ENDPOINT, {
       method: "POST",
@@ -57,11 +57,11 @@ const authService = {
   },
 
   async changePassword(
-    accessToken: string | undefined,
+    accessToken: string | null,
     oldPassword: string,
     newPassword: string,
   ) {
-    if (accessToken === undefined) return;
+    if (accessToken === null) return;
 
     const payload = JSON.stringify({
       oldPassword,
