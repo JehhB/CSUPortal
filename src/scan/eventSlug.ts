@@ -1,5 +1,5 @@
 import { digestStringAsync, CryptoDigestAlgorithm } from "expo-crypto";
-import { Event } from "@/scan/useScanEvents";
+import { Event } from "@/scan/EventsProvider";
 import slugify from "slugify";
 
 const eventSlug = {

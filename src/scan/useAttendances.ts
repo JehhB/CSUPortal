@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
-import { Event } from "./useScanEvents";
+import { Event } from "./EventsProvider";
 
 const ATTENDANCE_QUERY_KEY = "scanAttendances";
 

@@ -24,7 +24,7 @@ import QRCode from "react-native-qrcode-svg";
 import useStudentProfile from "@/student/profile/useStudentProfile";
 import useAuth from "@/auth/useAuth";
 import CameraDialog from "@/shared/components/CameraDialog";
-import { Event } from "@/scan/useScanEvents";
+import { Event } from "@/scan/EventsProvider";
 import sortedUniqBy from "lodash/sortedUniqBy";
 import throttle from "lodash/throttle";
 import orderBy from "lodash/orderBy";
@@ -37,7 +37,10 @@ function formatTimestamp(time: number) {
   return formattedDate;
 }
 
-async function parseEvent(json: string): Promise<Event | null> {
+async function parseEvent(
+  json: string,
+  owner: string | null,
+): Promise<Event | null> {
   try {
     const parsed = JSON.parse(json);
 
@@ -47,6 +50,9 @@ async function parseEvent(json: string): Promise<Event | null> {
       typeof parsed.name === "string" &&
       typeof parsed.dateCreated === "number"
     ) {
+      const event = parsed as Event;
+      event.owner = owner;
+
       return await eventSlug.slugify(parsed);
     }
 
@@ -64,11 +70,25 @@ export default function ScanIndex() {
   const { events, setEvents } = useScanEvents();
   const [currentPage, setCurrentPage] = useState(0);
 
+  const me = useMemo(
+    () =>
+      profileQuery.data
+        ? {
+            name: `${profileQuery.data.FirstName} ${profileQuery.data.LastName}`,
+            id: profileQuery.data.IDNumber,
+          }
+        : { name: null, id: null },
+    [profileQuery.data],
+  );
+
   const numberOfPage = Math.max(Math.ceil(events.length / EVENT_PER_PAGE), 1);
   const offset = currentPage * EVENT_PER_PAGE;
   const currentEvents = useMemo(
-    () => events.filter((_, i) => i >= offset && i < offset + EVENT_PER_PAGE),
-    [events, offset],
+    () =>
+      events
+        .filter((e) => e.owner === me.id)
+        .filter((_, i) => i >= offset && i < offset + EVENT_PER_PAGE),
+    [events, offset, me],
   );
 
   const [eventName, setEventName] = useState("");
@@ -100,14 +120,6 @@ export default function ScanIndex() {
     value: "",
   });
 
-  const creator = useMemo(
-    () =>
-      profileQuery.data
-        ? `${profileQuery.data.FirstName} ${profileQuery.data.LastName}`
-        : `Anonymous`,
-    [profileQuery.data],
-  );
-
   const createEvent = useCallback(() => {
     setEventName("");
     setInputState({
@@ -117,9 +129,10 @@ export default function ScanIndex() {
       onPress: (data) => {
         eventSlug
           .slugify({
+            creator: me.name,
+            owner: me.id,
             id: randomUUID(),
             name: data,
-            creator: null,
             dateCreated: Date.now(),
           })
           .then((newEvent) => {
@@ -128,7 +141,7 @@ export default function ScanIndex() {
       },
     });
     setTimeout(() => inputRef.current?.focus(), 100);
-  }, [setEventName, setInputState, setEvents]);
+  }, [setEventName, setInputState, setEvents, me]);
 
   const [showCamera, setShowCamera] = useState(false);
   const [scanError, setScanError] = useState(false);
@@ -201,7 +214,13 @@ export default function ScanIndex() {
                   <Text variant="labelMedium">{event.name}</Text>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <Text variant="labelMedium">{event.creator ?? "me"}</Text>
+                  <Text variant="labelMedium">
+                    {event.creator === null
+                      ? "Anonymous"
+                      : event.creator === me.name
+                        ? "me"
+                        : event.creator}
+                  </Text>
                 </DataTable.Cell>
                 <DataTable.Cell>
                   <Text variant="labelMedium">
@@ -339,7 +358,7 @@ export default function ScanIndex() {
               const event = events.find((e) => e.id === menuState.eventId);
               if (!event) return;
               const qr = {
-                creator,
+                creator: me,
                 name: event.name,
                 id: event.id,
                 dateCreated: event.dateCreated,
@@ -405,7 +424,7 @@ export default function ScanIndex() {
           error={scanError}
           onDismissError={() => setScanError(false)}
           onBarcodeScanned={(code) => {
-            parseEvent(code.data).then((event) => {
+            parseEvent(code.data, me.id).then((event) => {
               if (event === null) {
                 triggerError();
                 return;
